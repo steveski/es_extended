@@ -54,7 +54,7 @@ Locales['fr'] = {
   ['threw_pickup_prompt'] = 'appuyez sur ~y~E~s~ pour ramasser',
 
   -- Key mapping
-  ['keymap_showinventory'] = 'montrer l\'inventaire',
+  ['keymap_showinventory'] = 'afficher l\'inventaire',
 
   -- Salary related
   ['received_salary'] = 'vous avez reçu votre salaire: ~g~$%s~s~',
@@ -244,7 +244,7 @@ Locales['fr'] = {
   ['identity_register'] = 'Veuillez enregistrer votre personnage.',
   ['identity_welcome'] = 'Bonjour, ~b~%s %s',
   ['identity_fill_in'] = 'Veuillez remplir tous les champs avant de soumettre!',
-  ['identity_firstname'] = 'Prènom',
+  ['identity_firstname'] = 'Prénom',
   ['identity_lastname'] = 'Nom',
   ['identity_birthdate'] = 'Date de naissance',
   ['identity_sex'] = "Sexe",
