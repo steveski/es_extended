@@ -70,10 +70,6 @@ Locales['fr'] = {
   ['in_vehicle'] = 'Vous ne pouvez rien donner à quelqu\'un dans un véhicule',
 
   -- Commands
-  ['command_car'] = 'faire appaitre un véhicule',
-  ['command_car_car'] = 'nom ou hash du véhicule',
-  ['command_cardel'] = 'supprimer le véhicule à proximité',
-  ['command_cardel_radius'] = 'optionnel, supprime les véhicules dans un rayon spécifié',
   ['command_clear'] = 'vider le chat',
   ['command_clearall'] = 'vider le chat pour tous',
   ['command_clearinventory'] = 'vider l\'inventaire d\'un joueur',
@@ -116,7 +112,52 @@ Locales['fr'] = {
   ['commanderror_invalidcommand'] = '^3%s^0 n\'est pas une commande valide!',
   ['commanderror_invalidplayerid'] = 'il n\'ya aucun joueur avec cet ID en jeu',
   ['commandgeneric_playerid'] = 'id joueur',
+    -- Admin
+  ['admin_command_tptm'] = 'TP au marqueur',
+  ['admin_commandgeneric_playerid'] = '<playerid>',
+  ['admin_command_tptp'] = 'se téléporter au joueur',
+  ['command_tptp_rev'] = 'téléporter le joueur ici',
+  ['admin_command_car'] = 'faire appaitre un véhicule',
+  ['admin_command_car_car'] = 'nom ou hash du véhicule',
+  ['admin_command_cardel'] = 'supprimer le véhicule à proximité',
+  ['admin_cardel_radius'] = 'optionnel, supprime les véhicules dans un rayon spécifié',
+  ['admin_command_revive'] = 'Réanimer',
+  ['admin_command_freeze'] = 'Freeze',
+  ['admin_command_unfreeze'] = 'UnFreeze',
+  ['admin_command_get_coords'] = 'Imprime les coordonées dans la console(F8)',
+  ['admin_player_list'] = 'Imprime les joueurs connecté dans la console(F8) ou dans un menu',
+  ['admin_tp_res'] = 'Téléporté.',
+  ['admin_freeze_res'] = 'Vous avez été freeze par admin.',
+  ['admin_unfreeze_res'] = 'Vous avez été défreeze par admin.',
+  ['admin_revive_res'] = 'Vous avez été réanimé par admin.',
+  ['admin_health_res'] = 'Votre santé a été changée.',
+  ['admin_armor_res'] = 'Votre armure a été changée.',
+  ['admin_tptm_waypoint'] = 'Veuillez placer votre point.',
+  ['admin_error_self'] = 'Vous ne pouvez pas vous faire çà.',
+  ['admin_current_active'] = 'Vous avez une action active.',
+  ['admin_act_imp'] = 'Action impossible.',
 
+  --[[ Unfinished
+  ['command_on_player'] = 'Sur un joueur',
+  ['command_health'] = 'Restaurer la vie',
+  ['command_kill_player'] = 'Tue un joueur',
+  ['command_armor'] = 'Restaurer l\'armure',
+  ['command_spectate'] = 'Spectate',
+  ['command_give_weapon'] = 'Donner une arme',
+  ['command_get_weapon'] = 'Obtenir une arme',
+  ['command_del_weapon'] = 'Supprimer une arme',
+  ['command_kick'] = 'Kick',
+  ['command_ban'] = 'Ban',
+  ['command_unban'] = 'Unban',
+  ['admin_back'] = 'Retour',
+  ['admin_close'] = 'Fermer',
+
+  --Menu
+  ['menu_player'] = 'Joueur',
+  ['menu_vehicle'] = 'véhicule',
+  ['menu_job'] = 'jobs',
+  ['menu_esx'] = 'esx', ]]--
+  
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
   ['locale_currency'] = '$%s',
