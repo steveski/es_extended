@@ -14,6 +14,10 @@ Locales['fr'] = {
   -- Global
   ['submit'] = 'Valider',
   ['back'] = 'Retour en arrière',
+  ['close'] = 'Fermer',
+  ['exit'] = 'Sortir',
+  ['yes'] = 'Oui',
+  ['no'] = 'Non',
 
   -- Inventory
   ['inventory'] = 'inventaire %s / %s',
