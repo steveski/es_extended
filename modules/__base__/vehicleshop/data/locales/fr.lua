@@ -11,8 +11,8 @@
 --   This copyright should appear in every part of the project code
 
 Translations = {
-  ['blip_buy_title'] = 'concessionnaire (Buy)',
-  ['blip_sell_title'] = 'concessionnaire (Sell)',
+  ['blip_buy_title'] = 'Concessionnaire (Buy)',
+  ['blip_sell_title'] = 'Concessionnaire (Sell)',
   ['press_to_sell'] = 'Appuyez sur ~INPUT_CONTEXT~ pour vendre ce véhicule.',
   ['must_be_in_vehicle'] = 'You must be in a vehicle to use this.',
   ['already_in_vehicle'] = 'Vous êtes déjà dans un véhicule.',
