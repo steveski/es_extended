@@ -268,6 +268,10 @@ module.RetrieveStatuses = function(identifier, id)
 end
 
 module.UpdateStatus = function(identifier, id, queryIndex, data)
+  if Config.Modules.Cache.EnableDebugging then
+    print("module.UpdateStatus received")
+  end
+
   if not module.Cache["identities"] then
     module.Cache["identities"] = {}
   end
@@ -286,11 +290,18 @@ module.UpdateStatus = function(identifier, id, queryIndex, data)
 
   for k,v in pairs(queryIndex) do
     if not module.Cache["identities"][identifier][id]["status"][v] then
+      if Config.Modules.Cache.EnableDebugging then
+        print("["..identifier.."] Creating status for " .. v)
+      end
+
       module.Cache["identities"][identifier][id]["status"][v] = nil
     end
 
     if data[v] then
       if data[v]["value"] then
+        if Config.Modules.Cache.EnableDebugging then
+          print("module.Cache[identities]["..identifier.."]["..id.."][\"status\"]["..v.."] = " .. data[v]["value"])
+        end
         module.Cache["identities"][identifier][id]["status"][v] = data[v]["value"]
       end
     end
@@ -405,13 +416,15 @@ module.StartCache = function()
 
               for _,data in ipairs(result) do
                 for k,v in pairs(data) do
-                  if k == "status" or k == "accounts" then
-                    local index = 0
-                    if Config.Modules.Cache.EnableDebugging then
-                      print("module.Cache["..tostring(tab).."]["..tostring(result[i].owner).."]["..tostring(result[i].id).."]["..tostring(k).."] = "..tostring(v))
-                    end
+                  if k == "status" or k == "accounts" then    
+                    if not module.Cache[tab][result[i].owner][result[i].id][k] then               
+                      local index = 0
+                      if Config.Modules.Cache.EnableDebugging then
+                        print("module.Cache["..tostring(tab).."]["..tostring(result[i].owner).."]["..tostring(result[i].id).."]["..tostring(k).."] = "..tostring(v))
+                      end
 
-                    module.Cache[tab][result[i].owner][result[i].id][k] = json.decode(v)
+                      module.Cache[tab][result[i].owner][result[i].id][k] = json.decode(v)
+                    end
                   end
                 end
               end

@@ -20,5 +20,7 @@ Config.InventoryKey              = "REPLAY_START_STOP_RECORDING_SECONDARY" -- Ke
 Config.EnableLoadScreen          = true
 Config.EnableRichPresence        = true
 Config.DisableHealthRegeneration = true
+Config.DisableVehicleRewards     = true
+Config.DisableDefaultHud         = true
 
 Config.Modules = {}

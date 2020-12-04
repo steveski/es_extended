@@ -102,6 +102,9 @@ module.InitiateCharacterSelectionSpawn = function()
 
   ShutdownLoadingScreen()
   ShutdownLoadingScreenNui()
+
+  local serverId = GetPlayerServerId(PlayerId())
+  emitServer('utils:AddPlayerToHideList', serverId)
 end
 
 module.mainCameraScene = function()
@@ -184,10 +187,6 @@ module.DestroyCharacterSelect = function()
 end
 
 module.SelectCharacter = function(name, label, identity, skinContent)
-
-  local serverId = GetPlayerServerId(PlayerId())
-  emitServer('utils:AddPlayerToHideList', serverId)
-
   if skinContent then
     module.LoadPreviewSkin(skinContent)
   end
@@ -449,5 +448,4 @@ end
 module.SelectIdentity = function(identity)
   emit("esx:identity:selectIdentity", Identity(identity))
   camera.setMouseIn(false)
-  -- FreezeEntityPosition(PlayerPedId(), false)
 end

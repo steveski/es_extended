@@ -30,7 +30,7 @@ onServer('esx:character:request:select', function(identities)
 end)
 
 on('esx:character:breakLoop', function()
-  module.CharacterSelected = true
+  module.CharacterLoaded = true
 end)
 
 on('esx:character:reOpenCharacterSelect', function()
