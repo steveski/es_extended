@@ -17,6 +17,10 @@ module.WeedActive, module.CocaineActive, module.MethActive, module.HeroinActive 
 module.Ready, module.Frame, module.isPaused, module.Sick, module.CurrentAnimSet, module.StatusEffectActive, module.CurrentStrength = false, nil, false, false, nil, false, 0
 
 module.UpdateStatus = function(statuses)
+  if Config.Modules.Status.UseDebugging then
+    print("----START OF EVENT----")
+  end
+
   if statuses then
     local Statuses = {}
     local existingStatuses = {}
@@ -26,18 +30,38 @@ module.UpdateStatus = function(statuses)
         if v then
           if not existingStatuses[v] then
             existingStatuses[v] = v
-            if statuses[v]["fadeType"] == "desc" then
-              if statuses[v]["value"] < 50 or statuses[v]["value"] == 75 or statuses[v]["value"] == 100 then
-                table.insert(Statuses, statuses[v])
-              end
-            elseif statuses[v]["fadeType"] == "asc" then
-              if statuses[v]["value"] > 0 then
-                table.insert(Statuses, statuses[v])
+            if statuses[v] then
+              if statuses[v]["fadeType"] then
+                if statuses[v]["fadeType"] == "desc" then
+                  if statuses[v]["value"] then
+                    if Config.Modules.Status.UseDebugging then
+                      print("statuses["..v.."][value] = " .. statuses[v]["value"])
+                    end
+
+                    if statuses[v]["value"] < 50 or statuses[v]["value"] == 75 or statuses[v]["value"] == 100 then
+                      table.insert(Statuses, statuses[v])
+                    end
+                  end
+                elseif statuses[v]["fadeType"] == "asc" then
+                  if statuses[v]["value"] then
+                    if Config.Modules.Status.UseDebugging then
+                      print("statuses["..v.."][value] = " .. statuses[v]["value"])
+                    end
+
+                    if statuses[v]["value"] > 0 then
+                      table.insert(Statuses, statuses[v])
+                    end
+                  end
+                end
               end
             end
           end
         end
       end
+    end
+
+    if Config.Modules.Status.UseDebugging then
+      print("----END OF EVENT----")
     end
 
     module.Frame:postMessage({
@@ -112,7 +136,7 @@ module.Dying = function()
     SetPedMovementClipset(PlayerPedId(), "MOVE_M@DRUNK@MODERATEDRUNK_HEAD_UP", true)
   else
     if math.random(0,100) > 90 then
-      module.Trip()
+      module.Trip(2000)
     end
   end
 
@@ -323,16 +347,8 @@ module.DrunkEffects = function(fallChance,sickChance)
     module.Sick = false
   end
 
-  local fallTime = 2 * 1000 -- 2 seconds
-
   if fallChance >= 75 and not module.Sick then
-    if not IsPedInVehicle(PlayerPedId(), GetVehiclePedIsIn(PlayerPedId()), false) then
-      SetPedToRagdoll(PlayerPedId(), fallTime, fallTime, 0, 0, 0, 0)
-      DisableAllControlActions(0)
-      ApplyDamageToPed(PlayerPedId(), 1, false)
-      Wait(fallTime)
-      EnableAllControlActions(0)
-    end
+    module.Trip(2000)
   end
 
   module.IsMoving = true
@@ -357,14 +373,16 @@ module.DrunkDriving = function(veh)
   TaskVehicleTempAction(PlayerPedId(), veh, randomDrunkEvent.action, randomDrunkEvent.duration)
 end
 
-module.Trip = function()
-  local shakeIntensity = math.random(1,10) * 0.1
-  ShakeGameplayCam("DEATH_FAIL_IN_EFFECT_SHAKE", shakeIntensity)
-  SetPedToRagdoll(PlayerPedId(), 1000, 1000, 0, 0, 0, 0)
-  DisableAllControlActions(0)
-  ApplyDamageToPed(PlayerPedId(), 1, false)
-  Wait(1000)
-  EnableAllControlActions(0)
+module.Trip = function(time)
+  if not IsPedInVehicle(PlayerPedId(), GetVehiclePedIsIn(PlayerPedId()), false) then
+    local shakeIntensity = math.random(1,10) * 0.1
+    ShakeGameplayCam("DEATH_FAIL_IN_EFFECT_SHAKE", shakeIntensity)
+    SetPedToRagdoll(PlayerPedId(), time, time, 0, 0, 0, 0)
+    DisableAllControlActions(0)
+    ApplyDamageToPed(PlayerPedId(), 1, false)
+    Wait(time)
+    EnableAllControlActions(0)
+  end
 end
 
 module.Init = function()

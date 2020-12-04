@@ -56,7 +56,6 @@ module.ExtraFadeStrength    = 0
 module.LoopReady            = false
 module.CurrentModifier      = nil
 module.CharacterLoaded      = false
-module.PlayersToHide        = {}
 
 -- Locals
 local entityEnumerator = {
@@ -720,6 +719,10 @@ module.game.waitForVehicleToLoad = function(modelHash)
 
     BusyspinnerOff()
   end
+end
+
+module.game.CharacterLoaded = function()
+  module.CharacterLoaded = true
 end
 
 module.game.DoAnimation = function(dict,animationName,animationLength,flag)

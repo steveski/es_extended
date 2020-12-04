@@ -10,6 +10,8 @@
 --   If you redistribute this software, you must link to ORIGINAL repository at https://github.com/ESX-Org/es_extended
 --   This copyright should appear in every part of the project code
 
+module.PlayersToHide = {}
+
 module.game.createVehicle = function (model, coords, heading, cb)
   if type(model) == 'string' then
     model = GetHashKey(model)
@@ -32,12 +34,4 @@ module.game.createLocalVehicle = function(model, coords, heading, cb)
   if vehicle and cb then
     cb(vehicle)
   end
-end
-
-module.game.AddPlayerToHideList = function(player)
-  emitClient('utils:AddPlayerToHideList', -1, player)
-end
-
-module.game.RemovePlayerFromHideList = function(player)
-  emitClient('utils:RemovePlayerFromHideList', -1, player)
 end

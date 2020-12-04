@@ -27,7 +27,7 @@ onRequest("skin:getIdentitySkin", function(source, cb)
   local player = Player.fromId(source)
 
   module.findSkin(player, function(skin)
-    player:field('skin', skin)  
+    player:field('skin', skin)
     cb(skin)
   end)
 end)
