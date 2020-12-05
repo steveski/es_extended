@@ -35,7 +35,7 @@ module.Draw3DTextOverheadWithTimeout = function(ped,text,scale,font,radius)
 
     while module.timeoutState == true and module.actualState == text do 
 
-      Wait(10)
+      Wait(1)
 
       local senderCoords = GetEntityCoords(ped)
 

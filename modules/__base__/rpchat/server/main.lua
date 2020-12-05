@@ -32,9 +32,9 @@ meCommand:setHandler(function(player, args, baseArgs)
 
   local msg = module.toString(baseArgs)
 
-  local identity = Player.fromId(player.source):getIdentity()
+  local identity  = Player.fromId(player.source):getIdentity()
   local firstname = identity:getFirstName()
-  local lastname = identity:getLastName()
+  local lastname  = identity:getLastName()
 
   if msg and player.source then
 
@@ -53,9 +53,9 @@ doCommand:setHandler(function(player, args, baseArgs)
 
   local msg = module.toString(baseArgs)
 
-  local identity = Player.fromId(player.source):getIdentity()
+  local identity  = Player.fromId(player.source):getIdentity()
   local firstname = identity:getFirstName()
-  local lastname = identity:getLastName()
+  local lastname  = identity:getLastName()
 
   if msg and player.source then
 
@@ -68,8 +68,68 @@ doCommand:setHandler(function(player, args, baseArgs)
   end
 end)
 
+local oocCommand = Command("ooc", "user", "Send a OOC message in proximity")
+oocCommand:addArgument("message", "string", "The message you want to send", true)
+
+oocCommand:setHandler(function(player, args, baseArgs)
+  if not module.Config.DisableChat then
+    local message = module.toString(baseArgs)
+
+    local identity = Player.fromId(player.source)
+
+    if player then
+      local playerData = identity:getIdentity()
+      local firstname  = playerData:getFirstName()
+      local lastname   = playerData:getLastName()
+      local arg        = nil
+
+      if firstname and lastname then
+        arg = {args = {'OOC | ' .. player.source .. ' | ' ..  firstname .. ' ' .. lastname, message}, color = {0, 255, 255}}
+      else
+        arg = {args = {'OOC | ' .. player.source, message}, color = {0, 255, 255}}
+      end
+
+      if module.Config.ProximityMode then
+        emitClient('rpchat:proximitySendNUIMessage', -1, player.source, arg)
+      else
+        emitClient('chat:addMessage', -1, arg)
+      end
+    end
+  end
+end)
+
+local goocCommand = Command("gooc", "user", "Send a message across global OOC")
+goocCommand:addArgument("message", "string", "The message you want to send", true)
+
+goocCommand:setHandler(function(player, args, baseArgs)
+  if not module.Config.DisableChat then
+    local message = module.toString(baseArgs)
+
+    local identity = Player.fromId(player.source)
+
+    if player then
+      local playerData = identity:getIdentity()
+      local firstname  = playerData:getFirstName()
+      local lastname   = playerData:getLastName()
+      local arg        = nil
+
+      if firstname and lastname then
+        arg = {args = {'GOOC | ' .. player.source .. ' | ' ..  firstname .. ' ' .. lastname, message}, color = {255, 165, 0}}
+      else
+        arg = {args = {'GOOC | ' .. player.source, message}, color = {255, 165, 0}}
+      end
+
+      emitClient('chat:addMessage', -1, arg)
+    end
+  end
+end)
+
 lifeCommand:register()
 
 meCommand:register()
 
 doCommand:register()
+
+oocCommand:register()
+
+goocCommand:register()

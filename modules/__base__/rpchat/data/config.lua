@@ -16,4 +16,4 @@ Config.Locale        = 'en'
 Config.Proximity     = 25.001
 Config.ProximityMode = true
 Config.OverHeadMode  = true
-Config.DisableOOC    = false
+Config.DisableChat   = false

@@ -11,3 +11,11 @@
 --   This copyright should appear in every part of the project code
 
 module.Init()
+
+ESX.SetInterval(15000, function()
+    if module.Updated then
+        module.Updated = false
+    else
+        module.ShopInUse = false
+    end
+end)

@@ -36,7 +36,8 @@ module.RetrieveOwnedVehicles = function(identifier, id)
 
     local ownedVehicles = {}
 
-    for k,v in ipairs(module.Cache["owned_vehicles"][identifier][id]) do
+    for k,v in pairs(module.Cache["owned_vehicles"][identifier][id]) do
+      print(tostring(k) .. " | " .. tostring(v))
       if v["sold"] == 0 then
         table.insert(ownedVehicles, v)
       end
@@ -49,70 +50,42 @@ module.RetrieveOwnedVehicles = function(identifier, id)
 end
 
 module.CheckOwnedVehicle = function(identifier, id, plate)
-  if module.Cache["owned_vehicles"][identifier][id] then
-    for _,tab in ipairs(module.Cache["owned_vehicles"][identifier][id]) do
-      if tostring(tab["plate"]) == tostring(plate) then
-        return true
-      end
-    end
-
-    return false
+  if module.Cache["owned_vehicles"][identifier][id][plate] then
+    return true
   else
     return false
   end
 end
 
 module.GetOwnedVehicle = function(identifier, id, plate)
-  if module.Cache["owned_vehicles"][identifier][id] then
-    for k,v in ipairs(module.Cache["owned_vehicles"][identifier][id]) do
-      if tostring(v["plate"]) == tostring(plate) then
-        return module.Cache["owned_vehicles"][identifier][id][k]
-      end
-    end
-
-    return false
+  if module.Cache["owned_vehicles"][identifier][id][plate] then
+    return module.Cache["owned_vehicles"][identifier][id][plate]
   else
     return false
   end
 end
 
 module.RetrieveVehicle = function(identifier, id, plate)
-  if module.Cache["owned_vehicles"][identifier][id] then
-    for k,v in ipairs(module.Cache["owned_vehicles"][identifier][id]) do
-      if tostring(v["plate"]) == tostring(plate) then
-        module.Cache["owned_vehicles"][identifier][id][k]["stored"] = 0
-        return true
-      end
-    end
-
-    return false
+  if module.Cache["owned_vehicles"][identifier][id][plate] then
+    module.Cache["owned_vehicles"][identifier][id][plate]["stored"] = 0
+    return true
   else
     return false
   end
 end
 
 module.StoreVehicle = function(identifier, id, plate)
-  if module.Cache["owned_vehicles"][identifier][id] then
-    for k,v in ipairs(module.Cache["owned_vehicles"][identifier][id]) do
-      if tostring(v["plate"]) == tostring(plate) then
-        module.Cache["owned_vehicles"][identifier][id][k]["stored"] = 1
-        return true
-      end
-    end
-
-    return false
+  if module.Cache["owned_vehicles"][identifier][id][plate] then
+    module.Cache["owned_vehicles"][identifier][id][plate]["stored"] = 1
+    return true
   else
     return false
   end
 end
 
 module.UpdateVehicle = function(identifier, id, plate, props)
-  if module.Cache["owned_vehicles"][identifier][id] then
-    for k,v in ipairs(module.Cache["owned_vehicles"][identifier][id]) do
-      if tostring(v["plate"]) == tostring(plate) then
-        module.Cache["owned_vehicles"][identifier][id][k]["vehicle"] = props
-      end
-    end
+  if module.Cache["owned_vehicles"][identifier][id][plate] then
+    module.Cache["owned_vehicles"][identifier][id][plate]["vehicle"] = props
   end
 end
 
@@ -120,7 +93,7 @@ end
 --     Vehicleshop     --
 -------------------------
 
-module.BuyVehicle = function(identifier, id, data)
+module.BuyVehicle = function(identifier, id, data, plate)
   if module.Cache["owned_vehicles"] then
     if not module.Cache["owned_vehicles"][identifier] then
       module.Cache["owned_vehicles"][identifier] = {}
@@ -130,32 +103,21 @@ module.BuyVehicle = function(identifier, id, data)
       module.Cache["owned_vehicles"][identifier][id] = {}
     end
 
-    if module.Cache["owned_vehicles"][identifier][id] then
-      local index = #module.Cache["owned_vehicles"][identifier][id]+1
-
-      if not module.Cache["owned_vehicles"][identifier][id][index] then
-        module.Cache["owned_vehicles"][identifier][id][index] = {}
-      end
-
-      module.Cache["owned_vehicles"][identifier][id][index] = data
-
-      return true
-    else
-      return false
+    if not module.Cache["owned_vehicles"][identifier][id][plate] then
+      module.Cache["owned_vehicles"][identifier][id][plate] = {}
     end
+
+    module.Cache["owned_vehicles"][identifier][id][plate] = data
+
+    return true
   end
 end
 
 module.SellVehicle = function(identifier, id, plate)
-  if module.Cache["owned_vehicles"][identifier][id] then
-    for k,v in ipairs(module.Cache["owned_vehicles"][identifier][id]) do
-      if tostring(v["plate"]) == tostring(plate) then
-        module.Cache["owned_vehicles"][identifier][id][k]["sold"] = 1
-        return true
-      end
-    end
+  if module.Cache["owned_vehicles"][identifier][id][plate] then
+    module.Cache["owned_vehicles"][identifier][id][plate]["sold"] = 1
 
-    return false
+    return true
   else
     return false
   end
@@ -404,27 +366,65 @@ module.StartCache = function()
         module.Cache[tab] = {}
 
         MySQL.Async.fetchAll('SELECT * FROM ' .. tab, {}, function(result)
-          for i=1, #result, 1 do
-            if result[i].owner and result[i].id then
-              if not module.Cache[tab][result[i].owner] then
-                module.Cache[tab][result[i].owner] = {}
+          for _,data in ipairs(result) do
+            if data.owner and data.id then
+              if not module.Cache[tab][data.owner] then
+                module.Cache[tab][data.owner] = {}
               end
 
-              if not module.Cache[tab][result[i].owner][result[i].id] then
-                module.Cache[tab][result[i].owner][result[i].id] = {}
+              if not module.Cache[tab][data.owner][data.id] then
+                module.Cache[tab][data.owner][data.id] = {}
               end
 
-              for _,data in ipairs(result) do
-                for k,v in pairs(data) do
-                  if k == "status" or k == "accounts" then    
-                    if not module.Cache[tab][result[i].owner][result[i].id][k] then               
-                      local index = 0
-                      if Config.Modules.Cache.EnableDebugging then
-                        print("module.Cache["..tostring(tab).."]["..tostring(result[i].owner).."]["..tostring(result[i].id).."]["..tostring(k).."] = "..tostring(v))
-                      end
-
-                      module.Cache[tab][result[i].owner][result[i].id][k] = json.decode(v)
+              for k,v in pairs(data) do
+                if k == "status" or k == "accounts" then    
+                  if not module.Cache[tab][data.owner][data.id][k] then               
+                    if Config.Modules.Cache.EnableDebugging then
+                      print("module.Cache["..tostring(tab).."]["..tostring(data.owner).."]["..tostring(data.id).."]["..tostring(k).."] = "..tostring(v))
                     end
+
+                    module.Cache[tab][data.owner][data.id][k] = json.decode(v)
+                  end
+                end
+              end
+            end
+          end
+        end)
+      elseif tab == "owned_vehicles" then
+        module.Cache[tab] = {}
+
+        MySQL.Async.fetchAll('SELECT * FROM ' .. tab, {}, function(result)
+          for _,data in ipairs(result) do
+            if data.identifier and data.id then
+              if not module.Cache[tab][data.identifier] then
+                module.Cache[tab][data.identifier] = {}
+              end
+
+              if not module.Cache[tab][data.identifier][data.id] then
+                module.Cache[tab][data.identifier][data.id] = {}
+              end
+              for k,v in pairs(data) do
+                if not module.Cache[tab][data.identifier][data.id][data.plate] then
+                  module.Cache[tab][data.identifier][data.id][data.plate] = {}
+                end
+
+                if not module.Cache[tab][data.identifier][data.id][data.plate][k] then
+                  module.Cache[tab][data.identifier][data.id][data.plate][k] = {}
+
+                  if type(v) == "string" and v:len() >= 2 and v:find("{") and v:find("}") then
+                    if Config.Modules.Cache.EnableDebugging then
+                      if k == "plate" then
+                        print("module.Cache["..tostring(tab).."]["..tostring(data.identifier).."]["..tostring(data.id).."]["..data.plate.."]["..tostring(k).."] = "..tostring(v))
+                      end
+                    end
+                    module.Cache[tab][data.identifier][data.id][data.plate][k] = json.decode(v)
+                  else
+                    if Config.Modules.Cache.EnableDebugging then
+                      if k == "plate" then
+                        print("module.Cache["..tostring(tab).."]["..tostring(data.identifier).."]["..tostring(data.id).."]["..data.plate.."]["..tostring(k).."] = "..tostring(v))
+                      end
+                    end
+                    module.Cache[tab][data.identifier][data.id][data.plate][k] = v
                   end
                 end
               end
@@ -435,34 +435,40 @@ module.StartCache = function()
         module.Cache[tab] = {}
 
         MySQL.Async.fetchAll('SELECT * FROM ' .. tab, {}, function(result)
-          for i=1, #result, 1 do
-            if result[i].identifier and result[i].id then
-              if not module.Cache[tab][result[i].identifier] then
-                module.Cache[tab][result[i].identifier] = {}
+          local index = 0
+          
+          for _,data in ipairs(result) do
+            index = index + 1
+
+            if data.identifier and data.id then
+              if not module.Cache[tab][data.identifier] then
+                module.Cache[tab][data.identifier] = {}
               end
 
-              if not module.Cache[tab][result[i].identifier][result[i].id] then
-                module.Cache[tab][result[i].identifier][result[i].id] = {}
+              if not module.Cache[tab][data.identifier][data.id] then
+                module.Cache[tab][data.identifier][data.id] = {}
               end
 
-              local index = 0
+              if not module.Cache[tab][data.identifier][data.id][index] then
+                module.Cache[tab][data.identifier][data.id][index] = {}
+              end
 
-              for _,data in ipairs(result) do
-                index = index + 1
+              for k,v in pairs(data) do
+                if not module.Cache[tab][data.identifier][data.id][index][k] then
+                  module.Cache[tab][data.identifier][data.id][index][k] = {}
 
-                if not module.Cache[tab][result[i].identifier][result[i].id][index] then
-                  module.Cache[tab][result[i].identifier][result[i].id][index] = {}
-                end
-
-                for k,v in pairs(data) do
-                  if not module.Cache[tab][result[i].identifier][result[i].id][index][k] then
-                    module.Cache[tab][result[i].identifier][result[i].id][index][k] = {}
-
-                    if type(v) == "string" and v:len() >= 2 and v:find("{") and v:find("}") then
-                      module.Cache[tab][result[i].identifier][result[i].id][index][k] = json.decode(v)
-                    else
-                      module.Cache[tab][result[i].identifier][result[i].id][index][k] = v
+                  if type(v) == "string" and v:len() >= 2 and v:find("{") and v:find("}") then
+                    if Config.Modules.Cache.EnableDebugging then
+                      print("module.Cache["..tostring(tab).."]["..tostring(data.identifier).."]["..tostring(data.id).."]["..tostring(index).."]["..tostring(k).."] = "..tostring(v))
                     end
+
+                    module.Cache[tab][data.identifier][data.id][index][k] = json.decode(v)
+                  else
+                    if Config.Modules.Cache.EnableDebugging then
+                      print("module.Cache["..tostring(tab).."]["..tostring(data.identifier).."]["..tostring(data.id).."]["..tostring(index).."]["..tostring(k).."] = "..tostring(v))
+                    end
+
+                    module.Cache[tab][data.identifier][data.id][index][k] = v
                   end
                 end
               end
@@ -483,7 +489,7 @@ module.SaveCache = function()
         if module.Cache[tab] then
           for k,_ in pairs(module.Cache[tab]) do
             for k2,_ in pairs(module.Cache[tab][k]) do
-              for _,data in ipairs(module.Cache[tab][k][k2]) do
+              for _,data in pairs(module.Cache[tab][k][k2]) do
 
                 local plate = tostring(data["plate"])
 
@@ -529,11 +535,14 @@ module.SaveCache = function()
       elseif tab == "identities" then
         if module.Cache[tab] then
           for k,v in pairs(module.Cache[tab]) do
+            print("1 "..tostring(k) .. " | " .. tostring(v))
             for k2,v2 in pairs(module.Cache[tab][k]) do
+              print("2 " .. tostring(k2) .. " | " .. tostring(v2))
               for k3,data in pairs(module.Cache[tab][k][k2]) do
+                print("3 " .. tostring(k3) .. " | " .. tostring(data))
                 if k3 == "status" then
                   if Config.Modules.Cache.EnableDebugging then
-                    print("Updating Status In Cache For : ^2" .. tostring(k) .. "^7")
+                    print("Updating Status In Cache For : ^2" .. tostring(k) .. "^7 with IdentityId ^2" .. tostring(k2) .. "^7")
                   end
 
                   MySQL.Async.execute('UPDATE identities SET status = @status WHERE id = @id AND owner = @owner', {
@@ -543,7 +552,7 @@ module.SaveCache = function()
                   })
                 elseif k3 == "accounts" then
                   if Config.Modules.Cache.EnableDebugging then
-                    print("Updating Accounts In Cache For : ^2" .. tostring(k) .. "^7")
+                    print("Updating Accounts In Cache For : ^2" .. tostring(k) .. "^7 with IdentityId ^2" .. tostring(k2) .. "^7")
                   end
 
                   MySQL.Async.execute('UPDATE identities SET accounts = @accounts WHERE id = @id AND owner = @owner', {

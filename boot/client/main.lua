@@ -33,23 +33,53 @@ if Config.EnableHud then
   end)
 end
 
-ESX.SetInterval(1, function()
-  HideHudComponentThisFrame(3)
-  HideHudComponentThisFrame(4)
-  HideHudComponentThisFrame(6)
-  HideHudComponentThisFrame(7)
-  HideHudComponentThisFrame(8)
-  HideHudComponentThisFrame(9)
-  HideHudComponentThisFrame(13)
-  HideHudComponentThisFrame(19)
+ESX.SetInterval(15000, function()
+  N_0xf4f2c0d4ee209e20() 
+end)
+  
+ESX.SetInterval(5, function()
+  local playerPed = GetPlayerPed(-1)
+  local playerLocalisation = GetEntityCoords(playerPed)
+  ClearAreaOfCops(playerLocalisation.x, playerLocalisation.y, playerLocalisation.z, 400.0)
 end)
 
--- Disable Health Regeneration
-if Config.DisableHealthRegeneration then
-  ESX.SetInterval(10, function()
+Citizen.CreateThread(function() 
+  for i = 1, 15 do
+	EnableDispatchService(i, false)
+  end
+end)
+
+ESX.SetInterval(1, function()
+  if Config.DisableDefaultHud then
+    HideHudComponentThisFrame(3)
+    HideHudComponentThisFrame(4)
+    HideHudComponentThisFrame(6)
+    HideHudComponentThisFrame(7)
+    HideHudComponentThisFrame(8)
+    HideHudComponentThisFrame(9)
+    HideHudComponentThisFrame(13)
+    HideHudComponentThisFrame(19)
+  end
+
+  if Config.DisableVehicleRewards then
+    DisablePlayerVehicleRewards(PlayerId())
+  end
+
+  if Config.DisableNPCDrops then
+    RemoveAllPickupsOfType(0xDF711959) -- carbine rifle
+    RemoveAllPickupsOfType(0xF9AFB48F) -- pistol
+    RemoveAllPickupsOfType(0xA9355DCD) -- pumpshotgun
+  end
+
+  if Config.DisableHealthRegeneration then
     SetPlayerHealthRechargeMultiplier(PlayerId(), 0.0)
-  end)
-end
+  end
+
+  if Config.DisableWeaponWheel then
+    BlockWeaponWheelThisFrame();
+	DisableControlAction(0, 37,true);
+  end
+end)
 
 -- Disable wanted level
 if Config.DisableWantedLevel then

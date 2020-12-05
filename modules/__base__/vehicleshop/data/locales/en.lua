@@ -38,5 +38,6 @@ Translations = {
   ['server_buy_failure'] = '^1Error purchasing vehicle. Please contact the server administrator.^7',
   ['server_sell_success'] = '^7[^4%s^7 |^5 %s %s^7] ^3sold^7: ^5%s^7 with the plates ^3%s ^7for ^2$%s^7',
   ['server_sell_failure'] = '^1Error selling vehicle. Please contact the server administrator.^7',
-  ['press_access'] = 'Press ~INPUT_CONTEXT~ to access the vehicle shop.'
+  ['press_access'] = 'Press ~INPUT_CONTEXT~ to access the vehicle shop.',
+  ['shop_being_used'] = 'Someone is already using the shop. Please wait for them to finish.'
 }

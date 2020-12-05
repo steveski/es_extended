@@ -16,17 +16,34 @@ onClient('chatMessage', function(playerId, playerName, message)
   CancelEvent()
 
   if string.sub(message, 1, string.len('/')) ~= '/' then
-    if not module.Config.DisableOOC then
-      local player = Player.fromId(playerId):getIdentity()
-      local firstname = player:getFirstName()
-      local lastname = player:getLastName()
+    if not module.Config.DisableChat then
+      local player   = Player.fromId(playerId)
 
-      local arg = {args = {'OOC | ' .. firstname .. ' ' .. lastname, message}, color = {128, 128, 128}}
+      if player then
+        local playerData = player:getIdentity()
+        local firstname  = playerData:getFirstName()
+        local lastname   = playerData:getLastName()
+        local arg        = nil
 
-      if module.Config.proximityMode then
-        emitClient('rpchat:proximitySendNUIMessage', -1, playerId, arg)
+        if firstname and lastname then
+          arg = {args = {'IC | ' .. playerId .. ' | ' ..  firstname .. ' ' .. lastname, message}, color = {0, 255, 0}}
+        else
+          arg = {args = {'IC | ' .. playerId .. " | " .. playerName, message}, color = {0, 255, 0}}
+        end
+
+        if module.Config.ProximityMode then
+          emitClient('rpchat:proximitySendNUIMessage', -1, playerId, arg)
+        else
+          emitClient('chat:addMessage', -1, arg)
+        end
       else
-        emitClient('chat:addMessage', -1, arg)
+        local arg = {args = {'IC | ' .. playerId .. " | " .. playerName, message}, color = {0, 255, 0}}
+
+        if module.Config.ProximityMode then
+          emitClient('rpchat:proximitySendNUIMessage', -1, playerId, arg)
+        else
+          emitClient('chat:addMessage', -1, arg)
+        end
       end
     end
   end

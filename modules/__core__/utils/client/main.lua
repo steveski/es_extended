@@ -13,8 +13,9 @@
 Citizen.CreateThread(function()
   while true do
     if not module.CharacterLoaded then
-      for _,serverId in pairs(GetActivePlayers()) do
-        if serverId then
+      for _,playerId in pairs(GetActivePlayers()) do
+        if playerId then
+          local serverId = GetPlayerServerId(playerId)
           local ped = GetPlayerPed(GetPlayerFromServerId(serverId))
           if ped ~= PlayerPedId() then
             SetEntityNoCollisionEntity(PlayerPedId(), ped, true)

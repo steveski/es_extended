@@ -182,8 +182,8 @@ module.OpenGarageMenu = function(data)
 
       module.isInGarageMenu = true
 
-      for _,value in ipairs(vehicles) do
-        if value.stored and value.plate and value.sold == 0 then
+      for _,value in pairs(vehicles) do
+        if value.stored == 1 and value.plate and value.sold == 0 then
 
           local name = GetDisplayNameFromVehicleModel(value.model)
 

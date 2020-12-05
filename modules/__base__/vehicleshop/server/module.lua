@@ -16,6 +16,7 @@ module.Cache            = {}
 module.Cache.categories = {}
 module.Cache.vehicles   = {}
 module.Cache.usedPlates = {}
+module.ShopInUse        = false
 
 module.Config = run('data/config.lua', {vector3 = vector3})['Config']
 

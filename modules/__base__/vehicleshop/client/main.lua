@@ -21,6 +21,27 @@ local utils = M("utils")
 
 module.Init()
 
+Citizen.CreateThread(function()
+  while true do
+    if module.isInShopMenu then
+      for _,playerId in pairs(GetActivePlayers()) do
+        if playerId then
+          local serverId = GetPlayerServerId(playerId)
+          local ped = GetPlayerPed(GetPlayerFromServerId(serverId))
+          if ped ~= PlayerPedId() then
+            SetEntityNoCollisionEntity(PlayerPedId(), ped, true)
+            SetEntityVisible(ped, false, false)
+          end
+        end
+      end
+
+      Wait(1)
+    else
+      Wait(20)
+    end
+  end
+end)
+
 ESX.SetInterval(250, function()
   if not module.isInShopMenu then
     if utils.game.isPlayerInZone(module.Config.VehicleShopZones) then
@@ -34,6 +55,12 @@ ESX.SetInterval(250, function()
         emit('vehicleshop:exitedZone')
       end
     end
+  end
+end)
+
+ESX.SetInterval(10000, function()
+  if module.isInShopMenu then
+    emitServer('vehicleshop:stillUsingMenu')
   end
 end)
 

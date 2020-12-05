@@ -65,7 +65,7 @@ onRequest("vehicleshop:buyVehicle", function(source, cb, model, plate, price, fo
       container_id = nil
     }
 
-    local buyVehicle = Cache.BuyVehicle(player.identifier, player:getIdentityId(), data)
+    local buyVehicle = Cache.BuyVehicle(player.identifier, player:getIdentityId(), data, plate)
     if buyVehicle then
       local playerData = player:getIdentity()
 
@@ -89,6 +89,25 @@ onRequest("vehicleshop:buyVehicle", function(source, cb, model, plate, price, fo
   else
     cb(false)
   end
+end)
+
+onRequest("vehicleshop:isAnyoneInShopMenu", function(source, cb)
+  if module.ShopInUse then
+    cb(true)
+  else
+    module.Updated   = true
+    module.ShopInUse = true
+    cb(nil)
+  end
+end)
+
+onClient('vehicleshop:stillUsingMenu', function()
+  module.Updated = true
+end)
+
+onClient('vehicleshop:exitedMenu', function()
+  module.Updated   = false
+  module.ShopInUse = false
 end)
 
 onRequest("vehicleshop:startTestDrive", function(source, cb, model)
