@@ -535,11 +535,8 @@ module.SaveCache = function()
       elseif tab == "identities" then
         if module.Cache[tab] then
           for k,v in pairs(module.Cache[tab]) do
-            print("1 "..tostring(k) .. " | " .. tostring(v))
             for k2,v2 in pairs(module.Cache[tab][k]) do
-              print("2 " .. tostring(k2) .. " | " .. tostring(v2))
               for k3,data in pairs(module.Cache[tab][k][k2]) do
-                print("3 " .. tostring(k3) .. " | " .. tostring(data))
                 if k3 == "status" then
                   if Config.Modules.Cache.EnableDebugging then
                     print("Updating Status In Cache For : ^2" .. tostring(k) .. "^7 with IdentityId ^2" .. tostring(k2) .. "^7")
