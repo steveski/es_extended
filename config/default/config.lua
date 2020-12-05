@@ -22,5 +22,7 @@ Config.EnableRichPresence        = true
 Config.DisableHealthRegeneration = true
 Config.DisableVehicleRewards     = true
 Config.DisableDefaultHud         = true
+Config.DisableNPCDrops           = true
+Config.DisableWeaponWheel        = true
 
 Config.Modules = {}

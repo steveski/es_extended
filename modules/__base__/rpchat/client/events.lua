@@ -18,10 +18,12 @@ onServer('rpchat:sendLifeInvaderMessage', function(playerId, message, name)
 end)
 
 onServer('rpchat:3DTextOverhead', function(playerId, message)
+  local id = GetPlayerFromServerId(playerId)
 
-  local targetPed = GetPlayerPed(GetPlayerFromServerId(playerId))
-  module.Draw3DTextOverheadWithTimeout(targetPed,message,1,0)
-
+  if NetworkIsPlayerActive(id) then
+    local targetPed = GetPlayerPed(id)
+    module.Draw3DTextOverheadWithTimeout(targetPed,message,1,0)
+  end
 end)
 
 onServer('rpchat:proximitySendNUIMessage', function(id, message)
@@ -29,8 +31,12 @@ onServer('rpchat:proximitySendNUIMessage', function(id, message)
   local authorId = GetPlayerFromServerId(id)
 
   if authorId == clientId then
-		TriggerEvent('chat:addMessage', message)
-	elseif GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(clientId)), GetEntityCoords(GetPlayerPed(authorId)), true) < module.Config.proximity then
-    TriggerEvent('chat:addMessage', message)
+	TriggerEvent('chat:addMessage', message)
+  else
+    if NetworkIsPlayerActive(authorId) then
+      if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(clientId)), GetEntityCoords(GetPlayerPed(authorId)), true) < module.Config.Proximity then
+        TriggerEvent('chat:addMessage', message)
+	  end
 	end
+  end
 end)

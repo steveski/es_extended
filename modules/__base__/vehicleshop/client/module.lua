@@ -170,7 +170,14 @@ module.Init = function()
             return
           end
 
-          module.OpenShopMenu()
+          request('vehicleshop:isAnyoneInShopMenu', function(result)
+            if not result then
+              module.OpenShopMenu()
+            else
+              utils.ui.showNotification(_U('vehicleshop:shop_being_used'))
+              return
+            end
+          end)
         end
       end
     end)
@@ -269,6 +276,8 @@ module.ExitShop = function()
   end)
 
   module.isInShopMenu = false
+
+  emitServer('vehicleshop:exitedMenu')
 end
 
 --CLEANUP
@@ -310,6 +319,8 @@ module.ExitShopFromMenu = function()
 
     DoScreenFadeIn(500)
   end)
+
+  emitServer('vehicleshop:exitedMenu')
 end
 
 --CLEANUP
