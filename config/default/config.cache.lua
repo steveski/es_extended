@@ -1,7 +1,7 @@
 Config.Modules.Cache = {
   -- in minutes, the amount of time between cache updates to the database
   ServerSaveInterval           = 10,
-  EnableDebugging              = true,
+  EnableDebugging              = false,
   BasicCachedTables            = {
     "vehicles",
     "usedPlates"

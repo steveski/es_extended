@@ -13,7 +13,7 @@
 local utils = M("utils")
 
 module.camIsActive         = false
-module.camRadius           = 1.25
+module.camRadius           = 2.5
 module.camCoords           = vector3(0.0, 0.0, 0.0)
 module.camPolarAngle       = 0.0
 module.camAzimuthAngle     = 0.0
@@ -31,7 +31,7 @@ module.start = function()
 
     -- Mouse not inside menu
     if module.checkShouldMoveCam() then
-      
+
       if data.down[0] then
 
         module.camPolarAngle   = module.camPolarAngle   + offsetX / 5.0;
@@ -64,11 +64,11 @@ module.start = function()
     if module.checkShouldMoveCam() then
 
       module.camRadius = module.camRadius + delta * -0.25
-      
-      if module.camRadius < 0.75 then
-        module.camRadius = 0.75
-      elseif module.camRadius > 2.5 then
-        module.camRadius = 2.5
+
+      if module.camRadius < 0.5 then
+        module.camRadius = 0.5
+      elseif module.camRadius > 5.0 then
+        module.camRadius = 5.0
       end
 
     end
@@ -79,7 +79,7 @@ module.start = function()
   local pedCoords = GetEntityCoords(ped)
   local forward   = GetEntityForwardVector(ped)
 
-  module.camRadius                           = 1.25
+  module.camRadius                           = 5.0
   module.camCoords                           = pedCoords + forward * module.camRadius
   module.camPolarAngle, module.camAzimuthAngle = utils.math.world3DtoPolar3D(pedCoords, module.camCoords)
 
