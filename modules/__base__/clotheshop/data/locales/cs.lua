@@ -11,21 +11,14 @@
 --   This copyright should appear in every part of the project code
 
 Translations = {
-  ['valid_purchase'] = 'validate this purchase?',
-  ['yes'] = 'yes (<span style="color: green;">$%s</span>)',
+  ['valid_this_purchase'] = 'validate this purchase?',
+  ['yes'] = 'yes',
   ['no'] = 'no',
-  ['helmet'] = 'helmet / Hat',
-  ['glasses'] = 'glasses',
-  ['mask'] = 'mask',
-  ['ears'] = 'ears accessories',
-  ['shop'] = '%s shop',
-  ['set_unset'] = 'put on / Take off',
   ['not_enough_money'] = 'you do not have enough money',
-  ['press_access'] = 'press ~INPUT_CONTEXT~ to access the menu',
-  ['accessories_blip'] = 'accessories',
-  ['no_ears'] = 'you do not have ears accessories',
-  ['no_glasses'] = 'you do not have glasses',
-  ['no_helmet'] = 'you do not have a helmet',
-  ['no_mask'] = 'you do not have a mask',
+  ['press_menu'] = 'press ~INPUT_CONTEXT~ to access the ~y~Clothing Shop~s~.',
+  ['clothes'] = 'Clothing Shop',
   ['you_paid'] = 'you paid ~g~$%s~s~',
+  ['save_in_dressing'] = 'do you want to save the outfit in your property?',
+  ['name_outfit'] = 'name your outfit',
+  ['saved_outfit'] = 'the outfit has been saved!',
 }

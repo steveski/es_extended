@@ -17,6 +17,12 @@ on("esx:db:ready", function()
   migrate.Ensure("skin", "core")
 end)
 
+onClient('skin:saveAlteration', function(skin)
+  local player = Player.fromId(source)
+  player:field('skin', skin)
+  module.saveSkin(player, skin, cb)
+end)
+
 onRequest("skin:save", function(source, cb, skin)
   local player = Player.fromId(source)
   player:field('skin', skin)

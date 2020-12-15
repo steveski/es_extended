@@ -14,19 +14,22 @@
 local Input = M('input')
 local Menu = M('ui.menu')
 
-
-on('esx_accessories:hasEnteredMarker', function(zone)
+on('esx_clotheshop:hasEnteredMarker', function(zone)
 
   module.CurrentAction = 'shop_menu'
-  module.CurrentActionMsg = _U('accessories:press_access')
-  module.CurrentActionData = { accessory = zone }
+  module.CurrentActionMsg = _U('clotheshop:press_menu')
+  module.CurrentActionData = { }
 end)
 
-on('esx_accessories:hasExitedMarker', function(zone)
+on('esx_clotheshop:hasExitedMarker', function(zone)
 
   Menu.CloseAll()
   module.CurrentAction = nil
 
+end)
+
+on('clotheshop:openShopMenu', function(...)
+  module.ActivateShopMenu(...)
 end)
 
 -- Key Controls
@@ -38,14 +41,3 @@ Input.On('released', Input.Groups.MOVE, Input.Controls.PICKUP, function(lastPres
   end
 
 end)
-
-if module.Config.EnableControls then
-
-  Input.On('released', Input.Groups.MOVE, Input.Controls.REPLAY_SHOWHOTKEY, function(lastPressed)
-
-    if not ESX.IsDead then
-      module.OpenAccessoryMenu()
-    end
-  end)
-
-end

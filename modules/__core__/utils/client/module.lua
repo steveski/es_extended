@@ -35,6 +35,35 @@
 -- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
+--
+-----
+--
+-- Following license apply for windPnPoly and isLeft:
+--
+-- The MIT License (MIT)
+--
+-- Copyright 2019 Romain Billot
+--
+-- Permission is hereby granted, free of charge, to any person
+-- obtaining a copy of this software and associated documentation
+-- files (the "Software"), to deal in the Software without
+-- restriction, including without limitation the rights to use,
+-- copy, modify, merge, publish, distribute, sublicense, and/or
+-- sell copies of the Software, and to permit persons to whom the
+-- Software is furnished to do so, subject to the following
+-- conditions:
+--
+-- The above copyright notice and this permission notice shall be
+-- included in all copies or substantial portions of the Software.
+--
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+-- EXPRESS OR IMPLIED,INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+-- OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+-- NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+-- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+-- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+-- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+-- OTHER DEALINGS IN THE SOFTWARE.
 
 M('constants')
 
@@ -146,6 +175,49 @@ module.game.enumeratePickups = function()
 end
 
 EnumeratePickups = module.game.enumeratePickups -- Make it global for convenience
+
+-- Wind Around Point Poly
+module.game.windPnPoly = function(tablePoints, flag)
+  if tostring(type(flag)) == table then
+    py = flag.y
+    px = flag.x
+  else
+    px, py, pz = table.unpack(GetEntityCoords(PlayerPedId(), true))
+  end
+  wn = 0
+  table.insert(tablePoints, tablePoints[1])
+  for i=1, #tablePoints do
+    if i == #tablePoints then
+      break
+    end
+    if tonumber(tablePoints[i].y) <= py then
+      if tonumber(tablePoints[i+1].y) > py then
+        if module.game.isLeft(tablePoints[i], tablePoints[i+1], flag) > 0 then
+          wn = wn + 1
+        end
+      end
+    else
+      if tonumber(tablePoints[i+1].y) <= py then
+        if module.game.isLeft(tablePoints[i], tablePoints[i+1], flag) < 0 then
+          wn = wn - 1
+        end
+      end
+    end
+  end
+  return wn
+end
+
+module.game.isLeft = function(p1s, p2s, flag)
+  p1 = p1s
+  p2 = p2s
+  if tostring(type(flag)) == "table" then
+    p = flag
+  else
+    p = GetEntityCoords(PlayerPedId(), true)
+  end
+  return ( ((p1.x - p.x) * (p2.y - p.y))
+            - ((p2.x -  p.x) * (p1.y - p.y)) )
+end
 
 module.game.requestModel = function(model, cb)
 
@@ -641,7 +713,7 @@ end
 
 -- Check if player is within poly zone
 module.game.isPlayerInZone = function(zone)
-  local plyCoords = GetEntityCoords(GetPlayerPed(-1), true)
+  local plyCoords = GetEntityCoords(PlayerPedId(), true)
 
   if zone then
     for k, v in pairs(zone) do
@@ -657,49 +729,6 @@ module.game.isPlayerInZone = function(zone)
   else
     return false
   end
-end
-
--- Wind Around Point Poly
-module.game.windPnPoly = function(tablePoints, flag)
-  if tostring(type(flag)) == table then
-    py = flag.y
-    px = flag.x
-  else
-    px, py, pz = table.unpack(GetEntityCoords(PlayerPedId(), true))
-  end
-  wn = 0
-  table.insert(tablePoints, tablePoints[1])
-  for i=1, #tablePoints do
-    if i == #tablePoints then
-      break
-    end
-    if tonumber(tablePoints[i].y) <= py then
-      if tonumber(tablePoints[i+1].y) > py then
-        if module.game.isLeft(tablePoints[i], tablePoints[i+1], flag) > 0 then
-          wn = wn + 1
-        end
-      end
-    else
-      if tonumber(tablePoints[i+1].y) <= py then
-        if module.game.isLeft(tablePoints[i], tablePoints[i+1], flag) < 0 then
-          wn = wn - 1
-        end
-      end
-    end
-  end
-  return wn
-end
-
-module.game.isLeft = function(p1s, p2s, flag)
-  p1 = p1s
-  p2 = p2s
-  if tostring(type(flag)) == "table" then
-    p = flag
-  else
-    p = GetEntityCoords(PlayerPedId(), true)
-  end
-  return ( ((p1.x - p.x) * (p2.y - p.y))
-            - ((p2.x -  p.x) * (p1.y - p.y)) )
 end
 
 module.game.waitForVehicleToLoad = function(modelHash)
