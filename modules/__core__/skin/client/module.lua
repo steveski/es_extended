@@ -18,7 +18,7 @@ module.Editor = Extends(EventEmitter, 'SkinEditor')
 module.Skin   = Extends(EventEmitter, 'Skin')
 
 on('ui.menu.mouseChange', function(value)
-	if module.openedMenu then
+  if module.openedMenu then
 		camera.setMouseIn(value)
 	end
 end)
@@ -3607,8 +3607,6 @@ function SkinEditor:saveFromMenu()
 
   self:returnPlayer()
   emit('esx:skin:loaded')
-  -- local serverId = GetPlayerServerId(PlayerId())
-  -- emitServer('utils:RemovePlayerFromHideList', serverId)
   utils.game.CharacterLoaded()
   SetEntityVisible(PlayerPedId(), true, false)
 end
@@ -3667,6 +3665,43 @@ module.loadPlayerSkin = function(skinContent, cb)
 
   local skin = Skin(skinContent)
   skin:applyAll(cb)
+end
+
+module.alterSkinComponent = function(componentId, drawableId, textureId)
+  if IsPedComponentVariationValid(PlayerPedId(), componentId, drawableId, textureId) then
+    request("skin:getIdentitySkin", function(skinContent)
+      module.loadPlayerSkinAlteration(skinContent, componentId, drawableId, textureId, cb)
+    end)
+  end
+end
+
+module.loadPlayerSkinAlteration = function(skinContent, componentId, drawableId, textureId, cb)
+  if (skinContent == nil) then
+    return request("skin:getIdentitySkin", function(skinContent)
+      if (skinContent == nil) then
+        error("Cannot load player skin when the skin isn't created yet")
+      end
+      module.loadPlayerSkinAlteration(skinContent, componentId, drawableId, textureId, cb)
+    end)
+  end
+
+  if skinContent then
+    if skinContent.components then
+      if skinContent.components[componentId] then
+        if skinContent.components[componentId][1] then
+          skinContent.components[componentId][1] = drawableId
+        end
+
+        if skinContent.components[componentId][2] then
+          skinContent.components[componentId][2] = textureId
+        end
+      end
+    end
+  end
+
+  local skin = Skin(skinContent)
+  skin:applyAll(cb)
+  emitServer('skin:saveAlteration', skinContent)
 end
 
 -- skinContent might be nil

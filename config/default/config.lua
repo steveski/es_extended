@@ -24,5 +24,6 @@ Config.DisableVehicleRewards     = true
 Config.DisableDefaultHud         = true
 Config.DisableNPCDrops           = true
 Config.DisableWeaponWheel        = true
+Config.DisableAimAssist          = true
 
 Config.Modules = {}
