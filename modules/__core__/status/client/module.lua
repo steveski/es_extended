@@ -199,15 +199,11 @@ module.Drunk = function(drunk)
   local amount   = nil
   local max      = nil
 
-  print("made it here 1")
-
   if not module.DrunkActive then
     SetPedConfigFlag(PlayerPedId(), 100, true)
     SetPedIsDrunk(PlayerPedId(), true)
     module.DrunkActive = true
   end
-
-  print("made it here 2")
 
   if drunk <= 9 then
     if module.CurrentModifier then
@@ -266,19 +262,14 @@ module.Drunk = function(drunk)
     sick     = math.random(35,100)
   end
 
-  print("made it here 3")
-
   if max then
     print(max .. " | " .. module.CurrentStrength)
   end
 
   if modifier and module.CurrentStrength ~= max then
     module.CurrentStrength = max
-    print("Triggering. Was it finished?")
     module.IsDrunk(modifier, speed, amount, max)
   end
-
-  print("made it here 4")
 
   if clipset then
     if module.CurrentAnimSet ~= clipset then
@@ -294,8 +285,6 @@ module.Drunk = function(drunk)
     SetPedMovementClipset(PlayerPedId(), module.CurrentAnimSet, true)
   end
 
-  print("made it here 5")
-
   if drunk > 25 and sick > 55 then
     if IsPedInAnyVehicle(PlayerPedId(), false) then
       local veh = GetVehiclePedIsIn(PlayerPedId())
@@ -310,7 +299,6 @@ module.Drunk = function(drunk)
     end
   end
 
-  print("made it here 6")
 end
 
 module.Weed = function(value)

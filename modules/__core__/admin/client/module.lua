@@ -43,6 +43,29 @@ module.Init = function()
   end)
 end
 
+module.SpawnProp = function(sourceId, propname)
+  request("esx:admin:isAuthorized", function(a)
+    if not a then return end
+
+    local count = 0
+
+    RequestModel(propname)
+
+    while not HasModelLoaded(propname) do
+      if count >= 100 then
+        break
+      end
+
+      count = count + 1
+      Wait(10)
+    end
+
+    local x, y, z = table.unpack(GetEntityCoords(GetPlayerPed(-1), true))
+    local prop = CreateObjectNoOffset(GetHashKey(propname), x, y, z, true, true, true)
+    PlaceObjectOnGroundProperly(prop)
+  end, sourceId)
+end
+
 module.TeleportToMarker = function(sourceId)
   request("esx:admin:isAuthorized", function(a)
     if not a then return end

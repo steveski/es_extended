@@ -15,6 +15,14 @@ local utils = M('utils')
 
 Config.rconSecureCode = utils.string.random(24, true)
 
+local SpawnProp = Command("spawnprop", "admin", _U('admin_command_spawn_prop'))
+SpawnProp:addArgument("propname", "string", _U('admin_command_propname'))
+SpawnProp:setHandler(function(player, args)
+  if args.propname then
+    emitClient("esx:admin:inPlayerCommand", player.source, "SpawnProp", player.source, args.propname)
+  end
+end)
+
 local TeleportToMarker = Command("tpm", "admin", _U('admin_command_teleport_to_marker'))
 TeleportToMarker:addArgument("player", "player", _U('commandgeneric_playerid'))
 TeleportToMarker:setRconAllowed(true)
@@ -216,7 +224,7 @@ GiveWeapon:setHandler(function(player, args)
   emitClient("esx:admin:inPlayerCommand", args.player.source, "GiveWeaponPlayer", player.source, args.weapon, args.ammo)
 end)
 
-
+SpawnProp:register()
 TeleportToMarker:register()
 TeleportToPlayer:register()
 TeleportPlayerToMe:register()
