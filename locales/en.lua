@@ -131,8 +131,10 @@ Locales['en'] = {
   ['commandgeneric_playerid'] = 'player id',
 
   --- Admin
-  ['admin_command_tptm'] = 'TP to marker',
-	['admin_command_tptp'] = 'TP to player',
+  ['admin_command_tp_to_marker'] = 'teleport to marker',
+  ['admin_command_tp_to_player'] = 'teleport to player',
+  ['admin_command_tp_to_me'] = 'teleport player to me',
+  ['admin_command_tp_to_coords'] = 'teleport to coords',
   ['admin_command_tptp_rev'] = 'bring',
   ['admin_command_car'] = 'spawn a vehicle',
   ['admin_command_car_hashname'] = 'vehicle spawn name or hash',
@@ -162,15 +164,6 @@ Locales['en'] = {
   -- ['command_kick'] = 'Kick',
   -- ['command_ban'] = 'Ban',
   -- ['command_unban'] = 'Unban',
-  -- ['admin_back'] = 'Back',
-  -- ['admin_close'] = 'Close',
-
-  -- Menu
-  ['menu_admin_oplayer'] = 'some player',
-  ['menu_admin_player'] = 'player',
-	['menu_admin_vehicle'] = 'vechicle',
-	['menu_admin_job'] = 'jobs',
-  ['menu_admin_esx'] = 'esx',
 
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ',',
