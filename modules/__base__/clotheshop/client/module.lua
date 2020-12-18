@@ -277,7 +277,7 @@ module.OpenShopMenu = function(store, clothes, pos, heading)
       end
     elseif item.name == "buy" then
       skin.alterSkinComponent(module.ComponentId, module.DrawableId, module.TextureId)
-      module.Exit()
+      module.ExitAfterBuying(store, clothes)
 
       if not module.Exited then
         Interact.ShowHelpNotification(_U('clotheshop:press_menu', clothes, store))
@@ -300,6 +300,24 @@ module.Exit = function()
   module.TextureId      = 0
   module.PaletteId      = 0
   module.ComponentId    = 0
+
+  camera.destroy()
+  module.stopanim()
+end
+
+module.ExitAfterBuying = function(store, clothes)
+  module.clotheshopMenu:destroy()
+  module.clotheshopMenu = nil
+  module.IsInShopMenu   = false
+  module.DrawableIndex  = nil
+  module.TextureIndex   = nil
+  module.DrawableId     = 1
+  module.TextureId      = 0
+  module.PaletteId      = 0
+  module.ComponentId    = 0
+
+  Wait(500)
+  utils.game.StartTempAnimation("clothingshirt","try_shirt_positive_d",2000,2)
 
   camera.destroy()
   module.stopanim()
