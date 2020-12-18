@@ -754,10 +754,36 @@ module.game.CharacterLoaded = function()
   module.CharacterLoaded = true
 end
 
-module.game.DoAnimation = function(dict,animationName,animationLength,flag)
+module.game.RequestAnimSet = function(dict)
+  RequestAnimSet(dict)
+end
+
+module.game.StartAttitude = function(lib, anim)
+  RequestAnimSet(lib)
+
+  while not HasAnimSetLoaded(lib) do
+    Wait(0)
+  end
+
+  SetPedMovementClipset(PlayerPedId(), anim, true)
+end
+
+module.game.StartScenarioInPlace = function(anim)
+  TaskStartScenarioInPlace(PlayerPedId(), anim, 0, false)
+end
+
+module.game.LoopAnimation = function(dict,animationName,animationLength,flag)
   RequestAnimDict(dict)
   while not HasAnimDictLoaded(dict) do
-    Citizen.Wait(0)
+    Wait(0)
+  end
+  TaskPlayAnim(PlayerPedId(), dict, animationName, 8.0, 8.0, animationLength, flag, 0, false, false, false)
+end
+
+module.game.StartTempAnimation = function(dict,animationName,animationLength,flag)
+  RequestAnimDict(dict)
+  while not HasAnimDictLoaded(dict) do
+    Wait(0)
   end
   TaskPlayAnim(PlayerPedId(), dict, animationName, 8.0, 8.0, animationLength, flag, 0, false, false, false)
   Wait(animationLength)

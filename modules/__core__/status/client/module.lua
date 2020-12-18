@@ -162,7 +162,7 @@ module.Low = function()
     utils.game.LoopModifier("BlackOut", 100, 0.02, 0.0, 0.5)
   else
     if math.random(0,100) > 80 then
-      utils.game.DoAnimation("anim@mp_player_intupperface_palm","idle_a",4000,49)
+      utils.game.StartTempAnimation("anim@mp_player_intupperface_palm","idle_a",4000,49)
     end
   end
 end
@@ -329,7 +329,7 @@ end
 module.DrunkEffects = function(fallChance,sickChance)
   if sickChance >= 80 then
     module.Sick = true
-    utils.game.DoAnimation("oddjobs@taxi@tie","vomit_outside",8000,49)
+    utils.game.StartTempAnimation("oddjobs@taxi@tie","vomit_outside",8000,49)
     ApplyDamageToPed(PlayerPedId(), 1, false)
   else
     module.Sick = false
