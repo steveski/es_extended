@@ -23,24 +23,13 @@ SpawnProp:setHandler(function(player, args)
   end
 end)
 
-local TeleportToMarker = Command("tpm", "admin", _U('admin_command_teleport_to_marker'))
-TeleportToMarker:addArgument("player", "player", _U('commandgeneric_playerid'))
-TeleportToMarker:setRconAllowed(true)
+local TeleportToMarker = Command("tpm", "admin", _U('admin_command_tp_to_marker'))
 TeleportToMarker:setHandler(function(player, args)
-  if not player then
-    player = {source = Config.rconSecureCode}
 
-    if not args.player then
-      return print(_U('act_imp'))
-    end
-  end
-
-  if not args.player then args.player = player end
-
-  emitClient("esx:admin:inPlayerCommand", args.player.source, "TeleportToMarker", player.source)
+  emitClient("esx:admin:inPlayerCommand", player.source, "TeleportToMarker", player.source)
 end)
 
-local TeleportToPlayer = Command("ttp", "admin", _U('admin_command_teleport_to_player'))
+local TeleportToPlayer = Command("tp", "admin", _U('admin_command_tp_to_player'))
 TeleportToPlayer:addArgument("player", "player", _U('commandgeneric_playerid'))
 TeleportToPlayer:setHandler(function(player, args)
   if not args.player or args.player.source == player.source then
@@ -50,7 +39,7 @@ TeleportToPlayer:setHandler(function(player, args)
   emitClient("esx:admin:inPlayerCommand", player.source, "TeleportToPlayer", player.source, GetEntityCoords(GetPlayerPed(args.player.source)))
 end)
 
-local TeleportPlayerToMe = Command("ttm", "admin", _U('admin_command_teleport_player_to_me'))
+local TeleportPlayerToMe = Command("tptm", "admin", _U('admin_command_tp_to_me'))
 TeleportPlayerToMe:addArgument("player", "player", _U('commandgeneric_playerid'))
 TeleportPlayerToMe:setHandler(function(player, args)
   if not args.player or args.player.source == player.source then
@@ -60,7 +49,7 @@ TeleportPlayerToMe:setHandler(function(player, args)
   emitClient("esx:admin:inPlayerCommand", args.player.source, "TeleportPlayerToMe", player.source, GetEntityCoords(GetPlayerPed(player.source)))
 end)
 
-local TeleportToCoords = Command("tpc", "admin", _U('admin_command_teleport_to_coords'))
+local TeleportToCoords = Command("tpc", "admin", _U('admin_command_tp_to_coords'))
 TeleportToCoords:addArgument("x", "number", _U('commandgeneric_x'))
 TeleportToCoords:addArgument("y", "number", _U('commandgeneric_y'))
 TeleportToCoords:addArgument("z", "number", _U('commandgeneric_z'))
@@ -212,18 +201,6 @@ SetPlayerArmor:setHandler(function(player, args)
   emitClient("esx:admin:inPlayerCommand", args.player.source, "SetPlayerArmor", player.source, args.amount)
 end)
 
-local GiveWeapon = Command("giveweapon", "admin", _U('admin_command_give_weapon'))
-GiveWeapon:addArgument("player", "player", _U('commandgeneric_playerid'))
-GiveWeapon:addArgument("weapon", "string", _U('commandgeneric_weapon_name'))
-GiveWeapon:addArgument("ammo", "number", _U('commandgeneric_weapon_name'))
-GiveWeapon:setHandler(function(player, args)
-  if not args.player then args.player = player end
-  if not args.weapon then args.weapon = "WEAPON_BAT" end
-  if not args.ammo then args.ammo = 0 end
-
-  emitClient("esx:admin:inPlayerCommand", args.player.source, "GiveWeaponPlayer", player.source, args.weapon, args.ammo)
-end)
-
 SpawnProp:register()
 TeleportToMarker:register()
 TeleportToPlayer:register()
@@ -240,4 +217,3 @@ SpectatePlayer:register()
 SetPlayerHealth:register()
 KillPlayer:register()
 SetPlayerArmor:register()
-GiveWeapon:register()
