@@ -40,55 +40,68 @@ ESX.SetInterval(1, function()
   end
 end)
 
+ESX.SetInterval(200, function()
+  module.Coords = GetEntityCoords(PlayerPedId())
+end)
+
 ESX.SetInterval(1, function()
-  if module.Sitting then
-    local plyCoords = GetEntityCoords(PlayerPedId())
+  if module.Sitting and module.Coords then
     if module.Object.type == "chair" then
-      utils.ui.draw3DText(plyCoords.x, plyCoords.y, plyCoords.z-0.5, 0, 0, 0, 0, tostring(_U('sit:press_getup')))
+      utils.ui.draw3DText(module.Coords.x, module.Coords.y, module.Coords.z-0.5, 0, 0, 0, 0, tostring(_U('sit:press_getup')))
     elseif module.Object.type == "bed" then
-      utils.ui.draw3DText(plyCoords.x, plyCoords.y, plyCoords.z-1.0, 0, 0, 0, 0, tostring(_U('sit:press_getup_switch')))
+      utils.ui.draw3DText(module.Coords.x, module.Coords.y, module.Coords.z-1.0, 0, 0, 0, 0, tostring(_U('sit:press_getup_switch')))
     end
   else
     Wait(1000)
   end
 end)
 
-ESX.SetInterval(1, function()
-  if not module.Sitting then
-    local plyCoords = GetEntityCoords(PlayerPedId())
+ESX.SetInterval(300, function()
+  if not module.Sitting and module.Coords then
     for _,v in ipairs(module.Config.Interactables) do
-      local closestObject = GetClosestObjectOfType(plyCoords.x, plyCoords.y, plyCoords.z, module.Config.MaxDistance, GetHashKey(v.object), 0, 0, 0)
-      local coordsObject = GetEntityCoords(closestObject)
-      local distanceDiff = #(coordsObject - plyCoords)
-      if (distanceDiff < 3.0) and closestObject ~= 0 then
-        if (distanceDiff < module.Config.MaxDistance) then
-          if v.type == "chair" then
-            utils.ui.draw3DText(coordsObject.x, coordsObject.y, coordsObject.z, 0, 0, 0, 0, tostring(_U('sit:press_chair')))
-          elseif v.type == "bed" then
-            utils.ui.draw3DText(coordsObject.x, coordsObject.y, coordsObject.z, 0, 0, 0, 0, tostring(_U('sit:press_bed')))
+      local closestObject = GetClosestObjectOfType(module.Coords.x, module.Coords.y, module.Coords.z, module.Config.MaxDistance, GetHashKey(v.object), 0, 0, 0)
+      local coordsObject  = GetEntityCoords(closestObject)
+      local distanceDiff  = #(coordsObject - module.Coords)
+
+      if (distanceDiff < module.Config.MaxDistance) then
+        if v.type == "chair" then
+          if not module.DrawActive then
+            module.Draw = {
+              x    = coordsObject.x,
+              y    = coordsObject.y,
+              z    = coordsObject.z,
+              text = tostring(_U('sit:press_chair'))
+            }
+
+            module.DrawActive = true
           end
-          module.NearObject = true
+        elseif v.type == "bed" then
+          if not module.DrawActive then
+            module.Draw = {
+              x    = coordsObject.x,
+              y    = coordsObject.y,
+              z    = coordsObject.z,
+              text = tostring(_U('sit:press_bed'))
+            }
 
-          module.Object = {
-            name           = closestObject,
-            coords         = coordsObject,
-            type           = v.type,
-            scenario       = v.scenario,
-            scenario2      = v.scenario2,
-            verticalOffset = v.verticalOffset,
-            forwardOffset  = v.forwardOffset,
-            leftOffset     = v.leftOffset
-          }
-
+            module.DrawActive = true
+          end
         end
 
         break
       else
-        module.NearObject = false
-        module.Object     = nil
+        module.DrawActive = false
       end
     end
-  else
-    Wait(1000)
+  end
+end)
+
+ESX.SetInterval(1, function()
+  if module.DrawActive then
+    if module.Draw then
+      if module.Draw.x and module.Draw.y and module.Draw.z and module.Draw.text then
+        utils.ui.draw3DText(module.Draw.x, module.Draw.y, module.Draw.z, 0, 0, 0, 0, module.Draw.text)
+      end
+    end
   end
 end)
