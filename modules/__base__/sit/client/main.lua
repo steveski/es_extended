@@ -56,7 +56,7 @@ ESX.SetInterval(1, function()
   end
 end)
 
-ESX.SetInterval(300, function()
+ESX.SetInterval(500, function()
   if not module.Sitting and module.Coords then
     for _,v in ipairs(module.Config.Interactables) do
       local closestObject = GetClosestObjectOfType(module.Coords.x, module.Coords.y, module.Coords.z, module.Config.MaxDistance, GetHashKey(v.object), 0, 0, 0)
