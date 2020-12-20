@@ -93,6 +93,8 @@ ESX.SetInterval(500, function()
         module.DrawActive = false
       end
     end
+  else
+    Wait(1000)
   end
 end)
 
