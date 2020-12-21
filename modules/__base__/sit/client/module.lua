@@ -15,7 +15,7 @@ local utils = M('utils')
 module.Config = run('data/config.lua', {vector3 = vector3})['Config']
 
 module.Object, module.LastPos, module.CurrentCoords, module.CurrentScenario = nil, nil, nil, nil
-module.NearObject, module.Sitting = false, false
+module.Sitting, module.DrawActive = false, false
 
 module.Init = function()
   local translations = run('data/locales/' .. Config.Locale .. '.lua')['Translations']
