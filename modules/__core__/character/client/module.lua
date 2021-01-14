@@ -95,7 +95,7 @@ module.InitiateCharacterSelectionSpawn = function()
 end
 
 module.mainCameraScene = function()
-  local ped       = GetPlayerPed(-1)
+  local ped       = PlayerPedId()
   local pedCoords = GetEntityCoords(ped)
   local forward   = GetEntityForwardVector(ped)
 

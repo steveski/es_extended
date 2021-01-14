@@ -38,7 +38,7 @@ ESX.SetInterval(15000, function()
 end)
 --- Will remove cops from an area
 ESX.SetInterval(5, function()
-  local playerPed = GetPlayerPed(-1)
+  local playerPed = PlayerPedId()
   local playerLocalisation = GetEntityCoords(playerPed)
   ClearAreaOfCops(playerLocalisation.x, playerLocalisation.y, playerLocalisation.z, 400.0)
 end)

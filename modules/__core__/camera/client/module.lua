@@ -75,7 +75,7 @@ module.start = function()
 
   end)
 
-  local ped = GetPlayerPed(-1)
+  local ped = PlayerPedId()
   local pedCoords = GetEntityCoords(ped)
   local forward   = GetEntityForwardVector(ped)
 
@@ -129,11 +129,11 @@ module.pointToBone = function(boneIndex, offset)
   module.camTargetBone       = boneIndex
   module.camTargetBoneOffset = offset or vector3(0.0, 0.0, 0.0)
 
-  PointCamAtPedBone(module.cameraId, GetPlayerPed(-1), module.camTargetBone, module.camTargetBoneOffset.x, module.camTargetBoneOffset, module.camTargetBoneOffset.z, 0)
+  PointCamAtPedBone(module.cameraId, PlayerPedId() , module.camTargetBone, module.camTargetBoneOffset.x, module.camTargetBoneOffset, module.camTargetBoneOffset.z, 0)
 end
 
 module.onTick = function()
-  local coords = GetPedBoneCoords(GetPlayerPed(-1), module.camTargetBone, module.camTargetBoneOffset.x, module.camTargetBoneOffset.y, module.camTargetBoneOffset.z)
+  local coords = GetPedBoneCoords(PlayerPedId() , module.camTargetBone, module.camTargetBoneOffset.x, module.camTargetBoneOffset.y, module.camTargetBoneOffset.z)
 
   module.camCoords = utils.math.polar3DToWorld3D(coords, module.camPolarAngle, module.camAzimuthAngle, module.camRadius)
 
@@ -158,7 +158,7 @@ module.setPolarAzimuthAngle = function(polarAngle, azimuthAngle)
 end
 
 module.resetCamera = function()
-  local ped       = GetPlayerPed(-1)
+  local ped       = PlayerPedId()
   local pedCoords = GetEntityCoords(ped)
   local forward   = GetEntityForwardVector(ped)
 
