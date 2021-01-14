@@ -105,6 +105,8 @@ files {
   'modules/__core__/skin/data/html/debug.log',
   'modules/__core__/skin/data/html/fonts/coolvetica.ttf',
   'modules/__core__/skin/data/html/fonts/fontawesome-webfont.woff2',
+  'modules/__core__/skin/data/html/fonts/Montserrat-Bold.ttf',
+  'modules/__core__/skin/data/html/fonts/Montserrat-Regular.ttf',
   'modules/__core__/skin/data/html/images/check.svg',
   'modules/__core__/skin/data/html/images/eye1.png',
   'modules/__core__/skin/data/html/images/eye10.png',

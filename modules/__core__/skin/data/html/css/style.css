@@ -3,6 +3,16 @@
     src: url('../fonts/coolvetica.ttf');
 }
 
+@font-face {
+    font-family: Montserrat-Bold;
+    src: url('../fonts/Montserrat-Bold.ttf');
+}
+
+@font-face {
+    font-family: Montserrat-Regular;
+    src: url('../fonts/Montserrat-Regular.ttf');
+}
+
 html {
     margin: 0;
     width: 100vw;
@@ -27,7 +37,7 @@ body {
 
 .skin {
     position: absolute;
-    font-family: ChaletLondon;
+    font-family: Montserrat-Bold;
     letter-spacing: 1px;
     margin-top: 2.5vh;
     height: 95vh;
@@ -156,7 +166,7 @@ body {
     bottom: 0;
     padding-top: 8px;
     padding-bottom: 8px;
-    font-family: ChaletLondon;
+    font-family: Montserrat-Bold;
     font-size: 0.8em;
     text-transform: uppercase;
     color: #ffffff;
@@ -179,7 +189,7 @@ body {
 }
 
 .skn_confirm span {
-    font-family: ChaletLondon;
+    font-family: Montserrat-Bold;
 }
 
 .skn_confirm span,
@@ -230,7 +240,7 @@ body {
 
 .left_menu_label,
 .right_menu_label {
-    font-family: ChaletLondon;
+    font-family: Montserrat-Bold;
     text-transform: uppercase;
     display: block;
     width: 100%;
