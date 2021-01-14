@@ -17,6 +17,8 @@ module.Frames     = {}
 module.FocusOrder = {}
 module.CursorPos  = {x = 0, y = 0}
 
+---Make sure module and Frame is ready for messages
+---@param fn function Callback function to execute when ready
 local ensureReady = function(fn)
 
   if module.Ready then
@@ -38,26 +40,31 @@ local ensureReady = function(fn)
 
 end
 
+--- Create a new NUI Frame
+---@param name string Name of the frame
+---@param url string URL of the frame
+---@param visible boolean Whether to show the frame or not
 local createFrame = function(name, url, visible)
 
   if visible == nil then
     visible = true
   end
-
+  --- First ensure NUI frame is ready before sending initial SendNUIMessage
   ensureReady(function()
     SendNUIMessage({action = 'create_frame', name = name, url = url, visible = visible})
   end)
 
 end
-
+--- Show NUI Frame method
+---@param name string Name of the app to show
 local showFrame = function(name)
-
   ensureReady(function()
     SendNUIMessage({action = 'show_frame', name = name})
   end)
 
 end
-
+--- Hide NUI Frame
+---@param name string Name of the app to hide
 local hideFrame = function(name)
 
   ensureReady(function()
@@ -65,7 +72,8 @@ local hideFrame = function(name)
   end)
 
 end
-
+--- Destroy NUI Frame
+---@param name string Name of the app to destroy
 local destroyFrame = function(name)
 
   ensureReady(function()
@@ -74,6 +82,9 @@ local destroyFrame = function(name)
 
 end
 
+--- Send Data to a Frame instance
+---@param name string Name of the app to send data to
+---@param msg table Data to send to the NUI frame
 local sendFrameMessage = function(name, msg)
 
   ensureReady(function()
@@ -81,7 +92,9 @@ local sendFrameMessage = function(name, msg)
   end)
 
 end
-
+--- Focus a specific NUI frame
+---@param name string Name of the app to focus
+---@param cursor boolean Whether to show the mouse or not
 local focusFrame = function(name, cursor)
 
   ensureReady(function()
@@ -93,6 +106,7 @@ end
 
 Frame = Extends(EventEmitter, 'Frame')
 
+--- Unfocus all frames
 Frame.unfocusAll = function()
   module.FocusOrder = {}
   SetNuiFocus(false)
@@ -118,7 +132,7 @@ function Frame:constructor(name, url, visible)
   createFrame(self.name, self.url, self.visible)
 
   module.Frames[self.name] = self
-  
+
   self:on('message', function(msg)
     if msg.__esxinternal then
       self:emit('internal', msg.action, table.unpack(msg.args or {}))
@@ -129,17 +143,17 @@ function Frame:constructor(name, url, visible)
     emit(action, ...)
     self:emit(action, ...)
   end)
-
+  -- Listen for mouse:down event and set instance property
   self:on('mouse:down', function(button)
     self.mouse.down[button] = true
   end)
-
+  -- Listen for mouse:up event and set instance property
   self:on('mouse:up', function(button)
     self.mouse.down[button] = false
   end)
 
   self:on('mouse:move', function(x, y)
-    
+
     local last = table.clone(self.mouse)
     local data = table.clone(last)
 
@@ -162,18 +176,21 @@ function Frame:constructor(name, url, visible)
   end)
 
 end
-
+--- Unmount/destroy a NUI frame
+---@param name string Name of the app to destroy/unmount
 function Frame:destroy(name)
   self:unfocus()
   self.destroyed = true
   destroyFrame(self.name)
   self:emit('destroy')
 end
-
+--- Send message to a frame
+---@param msg table Data to send to the NUI Frame
 function Frame:postMessage(msg)
   sendFrameMessage(self.name, msg)
 end
-
+--- Focus an NUI Frame
+---@param cursor boolean Whether to show a cursor or not
 function Frame:focus(cursor)
 
   self.hasFocus  = true
@@ -200,7 +217,7 @@ function Frame:focus(cursor)
   self:emit('focus')
 
 end
-
+--- Unfocus the frame
 function Frame:unfocus()
 
   local newFocusOrder = {}
@@ -227,12 +244,13 @@ function Frame:unfocus()
   self:emit('unfocus')
 
 end
-
+--- Show the frame
 function Frame:show()
   self.visible = true
   showFrame(self.name)
 end
 
+--- Hide the frame
 function Frame:hide()
   self.visible = false
   hideFrame(self.name)

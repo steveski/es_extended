@@ -13,7 +13,7 @@
 -- Immediate definitions
 
 local __print = print
-
+--- Altered print with ESX prefix
 _print = function(...)
 
   local args = {...}
@@ -30,7 +30,7 @@ _print = function(...)
   __print(str)
 
 end
-
+--- Attach custom _print method to global print
 print = function(...)
 
   local args = {...}
@@ -43,7 +43,7 @@ print = function(...)
   _print(str)
 
 end
-
+--- Local index of check
 local tableIndexOf = function(t, val)
 
   for i=1, #t, 1 do
@@ -67,12 +67,17 @@ ESX.CancelledTasks = {}
 ESX.GetConfig = function()
   return Config
 end
-
+--- Log an error
+---@param err string Error to log
+---@param loc string Location error took place
 ESX.LogError = function(err, loc)
   loc = loc or '<unknown location>'
   print(debug.traceback('^1[error] in ^5' .. loc .. '^7\n\n^5message: ^1' .. err .. '^7\n'))
 end
-
+--- Evaluate code within a file
+---@param resource string The resource name that is being eval'ed
+---@param file string Filename
+---@param env string Any env variables
 ESX.EvalFile = function(resource, file, env)
 
   env           = env or {}
@@ -110,7 +115,9 @@ end
 ESX.IsTaskCancelled = function(id)
   return ESX.CancelledTasks[id]
 end
-
+--- A function to execute after x ms with a callback
+---@param msec number Milliseconds till execution of callback
+---@param cb function Callback function to run
 ESX.SetTimeout = function(msec, cb)
 
   local id = ESX.GetTaskId()
@@ -130,7 +137,9 @@ ESX.SetTimeout = function(msec, cb)
 end
 
 ESX.ClearTimeout = ESX.ClearTask
-
+--- Run a callback every x number of milliseconds
+---@param msec number Millisecond interval to run callback
+---@param cb function Callback function
 ESX.SetInterval = function(msec, cb)
 
   local id = ESX.GetTaskId()
@@ -159,7 +168,8 @@ ESX.SetInterval = function(msec, cb)
 end
 
 ESX.ClearInterval = ESX.ClearTask
-
+--- Run a function every tick
+---@param fn function Function to run
 ESX.SetTick = function(fn)
 
   local id = ESX.GetTaskId()

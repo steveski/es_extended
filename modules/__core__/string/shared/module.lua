@@ -10,6 +10,12 @@
 --   If you redistribute this software, you must link to ORIGINAL repository at https://github.com/ESX-Org/es_extended
 --   This copyright should appear in every part of the project code
 
+-- The module contains additional string utility functions
+
+--- Split a string according to a seperator
+---@param inputstr string String to parse
+---@param sep string Seperator to split the string by
+---@return string
 string.split = function(inputstr, sep)
 
 	if sep == nil then
@@ -26,7 +32,9 @@ string.split = function(inputstr, sep)
   return t
 
 end
-
+--- Check if a given string only contains numbers
+---@param str string String to check
+---@return boolean
 string.onlyContainsDigit = function(str)
 	return tonumber(str) ~= nil
 end

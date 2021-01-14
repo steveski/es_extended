@@ -14,7 +14,10 @@ local self = ESX.Modules['boot']
 
 ESX.Items = {}
 ESX.Jobs  = {}
-
+---- Check if Job & grade exists
+---@param job string Job in question
+---@param grade string Specific grade
+---@return boolean If it exists
 ESX.DoesJobExist = function(job, grade)
 
   grade = tostring(grade)
