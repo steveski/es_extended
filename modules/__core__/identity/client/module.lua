@@ -70,42 +70,82 @@ module.initIdentity = function(identity)
   local position = Config.Modules.identity.spawn
 
   request('esx:identity:getSavedPosition', function(savedPos)
-    module.DoSpawn({
+    request('esx:skin:getSkin', function(skin)
+      if skin then
+        module.DoSpawn({
+          x        = savedPos and savedPos.x or position.x,
+          y        = savedPos and savedPos.y or position.y,
+          z        = savedPos and savedPos.z or position.z,
+          heading  = savedPos and savedPos.heading or position.heading,
+          model    = 'mp_m_freemode_01',
+          skipFade = false
+        }, function()
+          local playerPed = PlayerPedId()
 
-        x        = savedPos and savedPos.x or position.x,
-        y        = savedPos and savedPos.y or position.y,
-        z        = savedPos and savedPos.z or position.z,
-        heading  = savedPos and savedPos.heading or position.heading,
-        model    = 'mp_m_freemode_01',
-        skipFade = false
+          if Config.EnablePvP then
+            SetCanAttackFriendly(playerPed, true, false)
+            NetworkSetFriendlyFireOption(true)
+          end
 
-      }, function()
-        local playerPed = PlayerPedId()
+          if Config.EnableHUD then
+            module.LoadHUD()
+          end
 
-        if Config.EnablePvP then
-          SetCanAttackFriendly(playerPed, true, false)
-          NetworkSetFriendlyFireOption(true)
-        end
+          ESX.Ready = true
 
-        if Config.EnableHUD then
-          module.LoadHUD()
-        end
+          emitServer('esx:client:ready')
+          emit('esx:ready')
 
-        ESX.Ready = true
+          initPlayerDeadCheckInterval()
+          emit("esx:skin:loadSkin", skin)
 
-        emitServer('esx:client:ready')
-        emit('esx:ready')
+          Citizen.Wait(2000)
 
-        initPlayerDeadCheckInterval()
+          ShutdownLoadingScreen()
+          ShutdownLoadingScreenNui()
 
-        Citizen.Wait(2000)
+          module.SavePositionInterval = ESX.SetInterval(Config.Modules.identity.playerCoordsSaveInterval * 1000, module.SavePosition)
+        end)
+      else
+        local newSpawn = {x = 402.869, y = -996.5966, z = -99.0003, heading = 180.01846313477}
 
-        ShutdownLoadingScreen()
-        ShutdownLoadingScreenNui()
+		
+        module.DoSpawn({
+          x        = newSpawn.x,
+          y        = newSpawn.y,
+          z        = newSpawn.z,
+          heading  = newSpawn.heading,
+          model    = 'mp_m_freemode_01',
+          skipFade = false
+        }, function()
+          local playerPed = PlayerPedId()
 
-        module.SavePositionInterval = ESX.SetInterval(Config.Modules.identity.playerCoordsSaveInterval * 1000, module.SavePosition)
-      end)
+          if Config.EnablePvP then
+            SetCanAttackFriendly(playerPed, true, false)
+            NetworkSetFriendlyFireOption(true)
+          end
 
+          if Config.EnableHUD then
+            module.LoadHUD()
+          end
+
+          ESX.Ready = true
+
+          emitServer('esx:client:ready')
+          emit('esx:ready')
+
+          initPlayerDeadCheckInterval()
+          emit("esx:skin:loadSkin")
+
+          Citizen.Wait(2000)
+
+          ShutdownLoadingScreen()
+          ShutdownLoadingScreenNui()
+
+          module.SavePositionInterval = ESX.SetInterval(Config.Modules.identity.playerCoordsSaveInterval * 1000, module.SavePosition)
+        end)
+      end
+    end)
   end, identity:serialize())
 end
 
@@ -166,23 +206,10 @@ module.RequestRegistration = function(cb)
       {name = "firstName", label =  _U('identity_firstname'),    type = "text", placeholder = "John"},
       {name = "lastName",  label =  _U('identity_lastname'),     type = "text", placeholder = "Smith"},
       {name = "dob",       label =  _U('identity_birthdate'),    type = "text", placeholder = "01/02/1234"},
-      {name = "isMale",    label =  _U('identity_male'),         type = "check", value = true},
       {name = "submit",    label =  _U('submit'),                type = "button"},
       {name = "back",      label =  _U('back'),                  type = "button"}
     }
   })
-
-  module.Menu:on("item.change", function(item, prop, val, index)
-
-    if (item.name == "isMale") and (prop == "value") then
-      if val then
-        item.label = _U('identity_male')
-      else
-        item.label = _U('identity_female')
-      end
-    end
-
-  end)
 
   module.Menu:on("item.click", function(item, index)
 
@@ -195,7 +222,6 @@ module.RequestRegistration = function(cb)
         module.Menu:destroy()
         module.Menu = nil
 
-        emit('esx:character:breakLoop')
         emit('esx:character:destroyCharacterSelect')
 
         request('esx:identity:register', cb, props)

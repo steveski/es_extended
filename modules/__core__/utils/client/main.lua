@@ -24,7 +24,7 @@ Citizen.CreateThread(function()
         end
       end
     else
-      break
+      Wait(999)
     end
 
     Wait(1)
@@ -34,10 +34,16 @@ end)
 Citizen.CreateThread(function()
   while true do
     if not module.CharacterLoaded then
-        DisableAllControlActions(0)
+      if module.ControlsEnabled then
+        module.ControlsEnabled = false
+      end
+
+      DisableAllControlActions(0)
+    elseif module.CharacterLoaded and not module.ControlsEnabled then
+      module.ControlsEnabled = true
+      EnableAllControlActions(0)
     else
-        EnableAllControlActions(0)
-        break
+      Wait(999)
     end
 
     Wait(1)

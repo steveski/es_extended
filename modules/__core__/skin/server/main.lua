@@ -12,10 +12,10 @@
 
 M('command')
 
-local skinCommand = Command("skin", "admin", "Open the skin editor for you or someone else")
-skinCommand:addArgument("player", "player", "The player to open the skin editor", true)
+local SkinCommand = Command("skin", "admin", "Open the skin editor for you or someone else")
+SkinCommand:addArgument("player", "player", "The player to open the skin editor", true)
 
-skinCommand:setHandler(function(player, args, baseArgs)
+SkinCommand:setHandler(function(player, args, baseArgs)
 
   local targetPlayer = args.player
 
@@ -23,10 +23,8 @@ skinCommand:setHandler(function(player, args, baseArgs)
     targetPlayer = player
   end
 
-  emitClient("esx:skin:openEditor", targetPlayer.source, targetPlayer.skin or nil)
+  emitClient("esx:skin:openEditor", targetPlayer.source)
 
 end)
 
-skinCommand:setRconAllowed(true)
-
-skinCommand:register()
+SkinCommand:register()

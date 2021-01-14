@@ -85,6 +85,7 @@ module.ExtraFadeStrength    = 0
 module.LoopReady            = false
 module.CurrentModifier      = nil
 module.CharacterLoaded      = false
+module.ControlsEnabled      = false
 
 -- Locals
 local entityEnumerator = {
@@ -752,6 +753,10 @@ end
 
 module.game.CharacterLoaded = function()
   module.CharacterLoaded = true
+end
+
+module.game.UnloadCharacter = function()
+  module.CharacterLoaded = false
 end
 
 module.game.RequestAnimSet = function(dict)

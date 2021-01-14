@@ -28,12 +28,13 @@ onRequest('esx:character:creation', function(source, cb, data)
 
 end)
 
-onRequest("esx:character:fetchSkin", function(source, cb, id)
+onRequest("esx:character:getSkin", function(source, cb, id)
   local player = Player.fromId(source)
 
-  MySQL.Async.fetchScalar('SELECT skin FROM identities WHERE id = @identityId',
+  MySQL.Async.fetchScalar('SELECT skin FROM identities WHERE id = @identityId AND owner = @owner',
   {
-    ['@identityId'] = id
+    ['@identityId'] = id,
+    ['@owner'] = player.identifier
   }, function(skin)
 
     if (skin) then

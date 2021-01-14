@@ -27,8 +27,8 @@ Identity.define({
   {name = 'firstName',  field = {name = 'first_name', type = 'VARCHAR',    length = 32,  default = 'NULL',                extra = nil}},
   {name = 'lastName',   field = {name = 'last_name',  type = 'VARCHAR',    length = 32,  default = 'NULL',                extra = nil}},
   {name = 'DOB',        field = {name = 'dob',        type = 'VARCHAR',    length = 10,  default = 'NULL',                extra = nil}},
-  {name = 'isMale',     field = {name = 'is_male',    type = 'INT',        length = nil, default = 1,                     extra = nil}},
-  {name = 'roles',      field = {name = 'roles',      type = 'MEDIUMTEXT', length = nil, default = '["citizen"]',            extra = nil}, encode = json.encode, decode = json.decode},
+  {name = 'gender',     field = {name = 'gender',     type = 'VARCHAR',    length = 32,  default = 'male',                extra = nil}},
+  {name = 'roles',      field = {name = 'roles',      type = 'MEDIUMTEXT', length = nil, default = '[]',                  extra = nil}, encode = json.encode, decode = json.decode},
   {name = 'status',     field = {name = 'status',     type = 'VARCHAR',    length = 999, default = json.encode(status),   extra = nil}, encode = json.encode, decode = json.decode},
   {name = 'accounts',   field = {name = 'accounts',   type = 'VARCHAR',    length = 255, default = json.encode(accounts), extra = nil}, encode = json.encode, decode = json.decode}
 })
@@ -90,7 +90,7 @@ function Identity.registerForPlayer(data, player, cb)
     firstName = data.firstName,
     lastName  = data.lastName,
     DOB       = data.dob,
-    isMale    = data.isMale
+    gender    = data.gender
   })
 
   identity:save(function(identityId)

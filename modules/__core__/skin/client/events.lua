@@ -11,11 +11,22 @@
 --   This copyright should appear in every part of the project code
 
 on('esx:ready', function()
-  module.init()
+  module.Init()
 end)
 
-onServer("esx:skin:openEditor", module.askOpenEditor)
+onServer("esx:skin:openEditor", function()
+  module.SavedCoords = GetEntityCoords(PlayerPedId(), true)
+  module.OpenCharacterCreator(true)
+end)
 
-on("esx:skin:loadSkin", function(skinContent, cb)
-  module.loadPlayerSkin(skinContent, cb)
+on("esx:skin:loadSkin", function(skin)
+  if skin then
+    module.HasSkin = true
+    module.LoadSkin(skin, true)
+    module.PedData = skin
+  else
+    module.HasSkin = false
+    module.OpenCharacterCreator()
+    module.PedData = module.Defaults
+  end
 end)
