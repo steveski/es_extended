@@ -81,7 +81,7 @@ module.Init = function()
 
     on('esx:interact:enter:' .. key, function(data)
       if data.name == key then
-        module.CurrentActionData = { 
+        module.CurrentActionData = {
           Location = data.location,
           Pos      = module.Config.GarageEntrances[data.location].Pos
         }
@@ -98,7 +98,7 @@ module.Init = function()
       end
     end)
 
-    on('esx:interact:exit:' .. key, function(data) 
+    on('esx:interact:exit:' .. key, function(data)
       module.Exit()
     end)
   end
@@ -134,7 +134,7 @@ module.Init = function()
 
             Interact.ShowHelpNotification(_U('garages:press_to_store'))
 
-            module.CurrentActionData = { 
+            module.CurrentActionData = {
               Location = data.location,
               Pos      = module.Config.GarageReturns[data.location].Pos
             }
@@ -153,7 +153,7 @@ module.Init = function()
       end
     end)
 
-    on('esx:interact:exit:' .. key, function(data) 
+    on('esx:interact:exit:' .. key, function(data)
       module.Exit()
     end)
   end
@@ -464,7 +464,7 @@ module.commit = function(plate, model, vehicleProps, name, data)
 
   utils.game.createLocalVehicle(model, module.Config.GarageSpawns[data.Location].Pos, module.Config.GarageSpawns[data.Location].Heading, function(vehicle)
     module.currentDisplayVehicle = vehicle
-    
+
     TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 
     utils.game.setVehicleProperties(vehicle, vehicleProps)
@@ -558,13 +558,13 @@ end
 -----------------------------------------------------------------------------------
 
 function module.mainCameraScene()
-  local ped       = GetPlayerPed(-1)
+  local ped       = PlayerPedId()
   local pedCoords = GetEntityCoords(ped)
   local forward   = GetEntityForwardVector(ped)
-  
+
   camera.setRadius(1.25)
   camera.setCoords(pedCoords + forward * 1.25)
   camera.setPolarAzimuthAngle(utils.math.world3DtoPolar3D(pedCoords, pedCoords + forward * 1.25))
-  
+
   camera.pointToBone(SKEL_ROOT)
 end

@@ -12,3 +12,5 @@
 
 local self = ESX.Modules['boot']
 
+collectgarbage('generational')
+

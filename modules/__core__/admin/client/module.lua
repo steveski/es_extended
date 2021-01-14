@@ -38,7 +38,7 @@ module.SpawnProp = function(sourceId, propname)
       Wait(10)
     end
 
-    local x, y, z = table.unpack(GetEntityCoords(GetPlayerPed(-1), true))
+    local x, y, z = table.unpack(GetEntityCoords(PlayerPedId() , true))
     local prop = CreateObjectNoOffset(GetHashKey(propname), x, y, z, true, true, true)
     PlaceObjectOnGroundProperly(prop)
   end, sourceId)
