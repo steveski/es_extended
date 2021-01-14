@@ -10,6 +10,8 @@ ui_page 'hud/index.html'
 
 ui_page_preload 'yes'
 
+lua54 'yes'
+
 dependencies {
   'yarn',
   'spawnmanager',
