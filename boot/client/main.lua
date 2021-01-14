@@ -32,23 +32,23 @@ if Config.EnableHud then
 
   end)
 end
-
+-- Will disable the idle camera
 ESX.SetInterval(15000, function()
-  N_0xf4f2c0d4ee209e20() 
+  InvalidateIdleCam()
 end)
-  
+--- Will remove cops from an area
 ESX.SetInterval(5, function()
   local playerPed = GetPlayerPed(-1)
   local playerLocalisation = GetEntityCoords(playerPed)
   ClearAreaOfCops(playerLocalisation.x, playerLocalisation.y, playerLocalisation.z, 400.0)
 end)
-
-Citizen.CreateThread(function() 
+--- Toggles dispath for all categories
+Citizen.CreateThread(function()
   for i = 1, 15 do
 	EnableDispatchService(i, false)
   end
 end)
-
+--- Disable certain gameplay elements depending on config settings
 ESX.SetInterval(1, function()
   if Config.DisableDefaultHud then
     HideHudComponentThisFrame(3)

@@ -11,7 +11,10 @@
 --   This copyright should appear in every part of the project code
 
 M('string')
+-- This module holds table/array utility functions
 
+--- Get Table size
+---@param t table Table to calculate size for
 table.sizeOf = function(t)
 
   local count = 0
@@ -23,7 +26,8 @@ table.sizeOf = function(t)
   return count
 
 end
-
+--- Check if table is an array
+---@param t table Table to check
 table.isArray = function(t)
 
   local keys = {}
@@ -51,7 +55,9 @@ table.isArray = function(t)
   return true
 
 end
-
+--- Get the index of a table value
+---@param t table The table to find value in
+---@param val any The value to find the index of
 table.indexOf = function(t, val)
 
   for i=1, #t, 1 do
@@ -63,7 +69,9 @@ table.indexOf = function(t, val)
   return -1
 
 end
-
+--- Get last index for a table value
+---@param t table Table to parse
+---@param val any Value to find last index of
 table.lastIndexOf = function(t, val)
 
   for i=#t, 1, -1 do
@@ -74,7 +82,9 @@ table.lastIndexOf = function(t, val)
 
   return -1
 end
-
+--- Returns the value of the first element matching testing function
+---@param t table Table to parse
+---@param cb function A function used to test what value to return
 table.find = function(t, cb)
 
   for i=1, #t, 1 do
@@ -86,7 +96,9 @@ table.find = function(t, cb)
   return nil
 
 end
-
+--- Returns the index of the first element in an array matching testing function
+---@param t table Table to parse
+---@param cb function A function used to test what value to return
 table.findIndex = function(t, cb)
 
   for i=1, #t, 1 do
@@ -97,7 +109,9 @@ table.findIndex = function(t, cb)
 
   return -1
 end
-
+--- Creates a new array with all elements that passed the testing function
+---@param t table Table to parse
+---@param cb function Filter function for the array
 table.filter = function(t, cb)
 
   local newTable = {}
@@ -111,7 +125,9 @@ table.filter = function(t, cb)
   return newTable
 
 end
-
+--- Creates a new array populated with the result of function on each element
+---@param t table Table to parse
+---@param cb function Function to mutate passed values
 table.map = function(t, cb)
 
   local newTable = {}
@@ -123,7 +139,8 @@ table.map = function(t, cb)
   return newTable
 
 end
-
+--- Reverses the table
+---@param t table Table to parse
 table.reverse = function(t)
 
   local newTable = {}
@@ -135,7 +152,8 @@ table.reverse = function(t)
   return newTable
 
 end
-
+--- Clones the table into a new table
+--- @param t table Table to clone
 table.clone = function(t)
 
   if type(t) ~= 'table' then
@@ -151,7 +169,9 @@ table.clone = function(t)
   return copy
 
 end
-
+--- Merges two tables and returns a new array
+---@param t1 table Table 1
+---@param t2 table Table 2
 table.concat = function(t1, t2)
 
   if type(t2) == 'string' then
@@ -168,7 +188,9 @@ table.concat = function(t1, t2)
   return t3
 
 end
-
+--- Returns a string from a parsed array
+---@param t table Table to parse
+---@param sep string Separator to parse with
 table.join = function(t, sep)
 
   local sep = sep or ','
@@ -188,7 +210,10 @@ table.join = function(t, sep)
   return str
 
 end
-
+--- Merge two tables together
+---@param t1 table First table
+---@param t2 table Second table
+---@return table Merged table
 table.merge = function(t1, t2)
 
   local t3 = {}
@@ -230,7 +255,9 @@ table.by = function(t, k)
   return t2
 
 end
-
+--- Get the value from specific table's path
+---@param t table Table to search
+---@param path string The path to the value in dot notation
 table.get = function(t, path)
 
   local split = string.split(path, '.')
@@ -252,7 +279,10 @@ table.get = function(t, path)
   return obj
 
 end
-
+--- Set the value of a table value based on the path
+---@param t table Table to set the value of
+---@param path string Path in dot notation for the value to alter
+---@param v any The data to set the provided key equal to
 table.set = function(t, path, v)
 
   local split = string.split(path, '.')
@@ -276,7 +306,8 @@ table.set = function(t, path, v)
   end
 
 end
-
+--- Return the keys for a table
+---@param t table Table to return keys for
 table.keys = function(t)
 
   local keys = {}
@@ -288,7 +319,8 @@ table.keys = function(t)
   return keys
 
 end
-
+--- Return the values for a table
+---@param t table Table to return values for
 table.values = function(t)
 
   local values = {}
