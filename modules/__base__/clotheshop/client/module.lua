@@ -276,7 +276,8 @@ module.OpenShopMenu = function(store, clothes, pos, heading)
         end
       end
     elseif item.name == "buy" then
-      skin.alterSkinComponent(module.ComponentId, module.DrawableId, module.TextureId)
+      skin.SaveUpdatedComponent(module.ComponentId, module.DrawableId, module.TextureId)
+      -- skin.alterSkinComponent(module.ComponentId, module.DrawableId, module.TextureId)
       module.ExitAfterBuying(store, clothes)
 
       if not module.Exited then

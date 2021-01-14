@@ -383,6 +383,14 @@ module.SavePlayerSkin = function()
   end, skin.gender, skin)
 end
 
+module.SaveUpdatedSkin = function()
+  local skin = module.PedData
+
+  request('esx:skin:save', function()
+
+  end, skin.gender, skin)
+end
+
 module.RespawnPlayer = function()
   SetEntityCoords(PlayerPedId(), -269.4, -955.3, 31.2, 0.0, 0.0, 0.0, true)
   SetEntityHeading(PlayerPedId(), 205.8)
@@ -426,6 +434,16 @@ module.CreateDefaultSkin = function()
 
   module.MainCameraScene()
   SetEntityVisible(PlayerPedId(), true, false)
+end
+
+module.SaveUpdatedComponent = function(componentId, drawableId, textureId)
+  if module.PedData.components[componentId] then
+    print("componentID found")
+    module.PedData.components[componentId] = {tonumber(drawableId), tonumber(textureId)}
+    module.SaveUpdatedSkin()
+  else
+    print("error")
+  end
 end
 
 module.GetLipstickColors = function()
