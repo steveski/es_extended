@@ -34,8 +34,12 @@ ESX.SetInterval(1, function()
       end
     end
   else
-    if IsControlJustPressed(0, module.Config.GetUpKey) and module.Sitting and IsInputDisabled(0) then
-      module.Wakeup()
+    if (IsControlJustPressed(0, module.Config.GetUpKey) or module.WakeupPlease) and module.Sitting and IsInputDisabled(0) then
+      if module.WakeupPlease then
+        module.Wakeup(true)
+      else
+        module.Wakeup()
+      end
     end
 
     if IsControlJustPressed(0, module.Config.SwitchPositionKey) then
@@ -100,6 +104,7 @@ ESX.SetInterval(500, function()
           Wait(1000)
         end
       else
+        module.Object = nil
         module.DrawActive = false
       end
     end

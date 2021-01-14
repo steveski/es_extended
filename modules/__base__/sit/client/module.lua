@@ -15,7 +15,7 @@ local utils = M('utils')
 module.Config = run('data/config.lua', {vector3 = vector3})['Config']
 
 module.Object, module.LastPos, module.CurrentCoords, module.CurrentScenario = nil, nil, nil, nil
-module.Sitting, module.DrawActive = false, false
+module.Sitting, module.DrawActive, module.WakeupPlease = false, false, false
 
 module.Init = function()
   local translations = run('data/locales/' .. Config.Locale .. '.lua')['Translations']
@@ -24,15 +24,20 @@ module.Init = function()
   module.Wakeup()
 end
 
-module.Wakeup = function()
+module.Wakeup = function(forced)
+  if forced then
+    Wait(500)
+  end
   ClearPedTasks(PlayerPedId())
   module.Sitting = false
   emitServer('sit:leavePlace', module.CurrentSitCoords)
   FreezeEntityPosition(PlayerPedId(), false)
   ClearPedTasks(PlayerPedId())
-  if module.LastPos and module.Object then
-    if module.Object.type == "bed" then
-      SetEntityCoords(PlayerPedId(), module.LastPos)
+  if not forced then
+    if module.LastPos and module.Object then
+      if module.Object.type == "bed" then
+        SetEntityCoords(PlayerPedId(), module.LastPos)
+      end
     end
   end
   module.CurrentSitCoords, module.CurrentScenario, module.LastPos = nil, nil, nil

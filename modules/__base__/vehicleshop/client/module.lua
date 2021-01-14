@@ -64,7 +64,8 @@ module.inSellMarker                   = false
 
 module.selectedVehicle                = module.selectedVehicle or 1
 module.selectedCategory               = module.selectedCategory or nil
-
+module.CharacterLoaded                = false
+module.ControlsLimited                = false
 -----------------------------------------------------------------------------------
 -- INIT
 -----------------------------------------------------------------------------------

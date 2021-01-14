@@ -14,7 +14,7 @@ Config = {}
 
 Config.MaxDistance       = 2.5
 Config.Debug             = false
-Config.SitKey            = 38 -- E
+Config.SitKey            = 52 -- Q
 Config.LieDownKey        = 58 -- G
 Config.GetUpKey          = 23 -- F
 Config.SwitchPositionKey = 175 -- Right Arrow

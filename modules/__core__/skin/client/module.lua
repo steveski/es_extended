@@ -307,6 +307,7 @@ module.LoadSkin = function(skin, hasSkin)
   if hasSkin then
     camera.destroy()
     utils.game.CharacterLoaded()
+    emit('esx:characterLoaded')
     Citizen.Wait(1000)
     DoScreenFadeIn(1000)
   end
@@ -396,6 +397,7 @@ module.RespawnPlayer = function()
   SetEntityHeading(PlayerPedId(), 205.8)
   camera.destroy()
   utils.game.CharacterLoaded()
+  emit('esx:characterLoaded')
   Wait(1000)
   DoScreenFadeIn(1000)
 end
@@ -438,11 +440,8 @@ end
 
 module.SaveUpdatedComponent = function(componentId, drawableId, textureId)
   if module.PedData.components[componentId] then
-    print("componentID found")
     module.PedData.components[componentId] = {tonumber(drawableId), tonumber(textureId)}
     module.SaveUpdatedSkin()
-  else
-    print("error")
   end
 end
 

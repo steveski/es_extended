@@ -43,18 +43,22 @@ Citizen.CreateThread(function()
 end)
 
 ESX.SetInterval(250, function()
-  if not module.isInShopMenu then
-    if utils.game.isPlayerInZone(module.Config.VehicleShopZones) then
-      if not module.inMarker then
-        module.inMarker = true
-        emit('vehicleshop:enteredZone')
-      end
-    else
-      if module.inMarker then
-        module.inMarker = false
-        emit('vehicleshop:exitedZone')
+  if module.CharacterLoaded then
+    if not module.isInShopMenu then
+      if utils.game.isPlayerInZone(module.Config.VehicleShopZones) then
+        if not module.inMarker then
+          module.inMarker = true
+          emit('vehicleshop:enteredZone')
+        end
+      else
+        if module.inMarker then
+          module.inMarker = false
+          emit('vehicleshop:exitedZone')
+        end
       end
     end
+  else
+    Wait(1000)
   end
 end)
 
@@ -64,33 +68,45 @@ ESX.SetInterval(10000, function()
   end
 end)
 
-ESX.SetInterval(0, function()
+ESX.SetInterval(1, function()
   if module.inMarker or module.inSellMarker then
-    Input.DisableControl(Input.Groups.MOVE, Input.Controls.SPRINT)
-    Input.DisableControl(Input.Groups.MOVE, Input.Controls.JUMP)
-    
-    DisableControlAction(0,21,true)
-    DisableControlAction(0,22,true)
-    DisableControlAction(0,25,true)  -- disable aim
-    DisableControlAction(0,47,true)  -- disable weapon
-    DisableControlAction(0,58,true)  -- disable weapon
-    DisableControlAction(0,263,true) -- disable melee
-    DisableControlAction(0,264,true) -- disable melee
-    DisableControlAction(0,257,true) -- disable melee
-    DisableControlAction(0,140,true) -- disable melee
-    DisableControlAction(0,141,true) -- disable melee
-    DisableControlAction(0,142,true) -- disable melee
-    DisableControlAction(0,143,true) -- disable melee
+    if module.CharacterLoaded then
+      if not module.ControlsLimited then
+        module.ControlsLimited = true
+        Input.DisableControl(Input.Groups.MOVE, Input.Controls.SPRINT)
+        Input.DisableControl(Input.Groups.MOVE, Input.Controls.JUMP)
+      end
 
-    NetworkSetFriendlyFireOption(false)
-    SetCanAttackFriendly(PlayerPedId(), false, false)
+      DisableControlAction(0,21,true)
+      DisableControlAction(0,22,true)
+      DisableControlAction(0,25,true)  -- disable aim
+      DisableControlAction(0,47,true)  -- disable weapon
+      DisableControlAction(0,58,true)  -- disable weapon
+      DisableControlAction(0,263,true) -- disable melee
+      DisableControlAction(0,264,true) -- disable melee
+      DisableControlAction(0,257,true) -- disable melee
+      DisableControlAction(0,140,true) -- disable melee
+      DisableControlAction(0,141,true) -- disable melee
+      DisableControlAction(0,142,true) -- disable melee
+      DisableControlAction(0,143,true) -- disable melee
+
+      NetworkSetFriendlyFireOption(false)
+      SetCanAttackFriendly(PlayerPedId(), false, false)
+    end
 
     if IsControlJustReleased(0, 38) and module.CurrentAction ~= nil then
+      emit('sit:forceWakeup')
       module.CurrentAction()
     end
 
     if module.isInShopMenu then
       DisableControlAction(0,51,true)
+    end
+  else
+    if module.ControlsLimited then
+      Input.EnableControl(Input.Groups.MOVE, Input.Controls.SPRINT)
+      Input.EnableControl(Input.Groups.MOVE, Input.Controls.JUMP)
+      module.ControlsLimited = false
     end
   end
 
