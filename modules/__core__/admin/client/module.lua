@@ -208,12 +208,12 @@ module.GetUserCoords = function(sourceId, targetId, firstName, lastName, coords)
   end, sourceId)
 end
 
-module.GetPlayerList = function(sourceId)
+module.GetPlayerList = function(sourceId, data)
   request("esx:admin:isAuthorized", function(a)
     if not a then return end
 
-    for _, playerId in ipairs(GetActivePlayers()) do
-      print(('Player %s with id %i is in the server'):format(GetPlayerName(playerId), playerId))
+    for _,value in ipairs(data) do
+      print("Player["..value.id.."]("..value.name.."): "..value.firstname.." "..value.lastname.." | Ping: "..value.ping)
     end
   end, sourceId)
 end

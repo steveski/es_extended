@@ -152,15 +152,25 @@ end)
 local GetPlayerList = Command("players", "admin", _U('admin_command_player_list'))
 GetPlayerList:setRconAllowed(true)
 GetPlayerList:setHandler(function(player)
-  if not player then
-    for _, playerId in ipairs(GetPlayers()) do
-      print(('Player %s with id %i'):format(GetPlayerName(playerId), playerId))
-    end
+  local dataTable = {}
 
-    return
+  for _, playerId in ipairs(GetPlayers()) do
+    local ply = Player.fromId(playerId)
+    local playerData = ply:getIdentity()
+
+    table.insert(dataTable, {
+      name = GetPlayerName(playerId),
+      firstname = playerData:getFirstName(),
+      lastname = playerData:getLastName(),
+      id = playerId,
+      ping = GetPlayerPing(playerId)
+    })
+
+    -- print("Player ["..GetPlayerName(playerId).."] "..firstname.." "..lastname.."("..playerId..") - Ping: " .. ping)
+    -- print(('Player %s with id %s ping = %s'):format(""..GetPlayerName(playerId).." | "..firstname..""..lastname, playerId, ping))
   end
 
-  emitClient("esx:admin:inPlayerCommand", player.source, "GetPlayerList", player.source)
+  emitClient("esx:admin:inPlayerCommand", player.source, "GetPlayerList", player.source, dataTable)
 end)
 
 local SpectatePlayer = Command("spect", "admin", _U('admin_command_spectate_player'))
@@ -201,6 +211,32 @@ SetPlayerArmor:setHandler(function(player, args)
   emitClient("esx:admin:inPlayerCommand", args.player.source, "SetPlayerArmor", player.source, args.amount)
 end)
 
+local KickPlayer = Command("kick", "admin", _U('admin_command_kick_player'))
+KickPlayer:addArgument("player", "player", _U('commandgeneric_playerid'))
+KickPlayer:addArgument("reason", "string", _U('commandgeneric_reason'))
+KickPlayer:setRconAllowed(true)
+KickPlayer:setHandler(function(player, args)
+  if not args.player then args.player = player end
+
+  local foundPlayer = Player.fromId(args.player.source)
+  playerId = args.player.source 
+
+  if foundPlayer then
+    if not args.reason then args.reason = "You were kicked by a member of staff." end
+    
+    DropPlayer(playerId, args.reason)
+  end
+end)
+
+local KickAll = Command("kickall", "admin", _U('admin_command_kick_all_player'))
+KickAll:setRconAllowed(true)
+KickAll:setHandler(function(player, args)
+  for _, playerId in ipairs(GetPlayers()) do
+    local player = Player.fromId(playerId)
+    DropPlayer(playerId, "You have been kicked in preparation for a pending server restart.")
+  end
+end)
+
 SpawnProp:register()
 TeleportToMarker:register()
 TeleportToPlayer:register()
@@ -217,3 +253,5 @@ SpectatePlayer:register()
 SetPlayerHealth:register()
 KillPlayer:register()
 SetPlayerArmor:register()
+KickPlayer:register()
+KickAll:register()
