@@ -17,6 +17,10 @@ module.OnSelfCommand = function(action, ...)
   module[action](...)
 end
 
+module.Init = function()
+
+end
+
 module.SpawnProp = function(sourceId, propname)
   request("esx:admin:isAuthorized", function(a)
     if not a then return end
