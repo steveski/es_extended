@@ -17,7 +17,6 @@
 ### Requirements:
 
 - An installed MariaDB server (we will not support MySQL).
-- [Async script by ESX-Framework](https://github.com/esx-framework/async)
 - [MySQL-Async by brouznouf](https://github.com/brouznouf/fivem-mysql-async)
 - [Node.Js 10+](https://nodejs.org/en/)
 

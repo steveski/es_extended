@@ -16,8 +16,7 @@ dependencies {
   'yarn',
   'spawnmanager',
   'baseevents',
-  'mysql-async',
-  'async'
+  'mysql-async'
 }
 
 files {
@@ -304,7 +303,6 @@ files {
 
 server_scripts {
   'fxmanifest.workaround.js',
-  '@async/async.lua',
   '@mysql-async/lib/MySQL.lua',
   'locale.lua',
   'locales/br.lua',
