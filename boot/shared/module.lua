@@ -61,28 +61,19 @@ ESX                = {}
 ESX.Loaded         = false
 ESX.Ready          = false
 ESX.Modules        = {}
-ESX.ErroredModules = {}
 ESX.TaskCount      = 1
 ESX.CancelledTasks = {}
 
 ESX.GetConfig = function()
   return Config
 end
-
 --- Log an error
 ---@param err string Error to log
 ---@param loc string Location error took place
----@param shouldAddStackTrace boolean default true
-ESX.LogError = function(err, loc, shouldAddStackTrace)
+ESX.LogError = function(err, loc)
   loc = loc or '<unknown location>'
-
-  if not(shouldAddStackTrace) then
-    print('^1[error] in ^5' .. loc .. '^7\n\n^5message: ^1' .. err .. '^7\n')
-  else
-    print(debug.traceback('^1[error] in ^5' .. loc .. '^7\n\n^5message: ^1' .. err .. '^7\n'))
-  end
+  print(debug.traceback('^1[error] in ^5' .. loc .. '^7\n\n^5message: ^1' .. err .. '^7\n'))
 end
-
 --- Evaluate code within a file
 ---@param resource string The resource name that is being eval'ed
 ---@param file string Filename
@@ -97,13 +88,13 @@ ESX.EvalFile = function(resource, file, env)
   local success = true
 
   if (err) then
-    ESX.LogError(err, '@' .. resource .. ':' .. file, true)
-    return env, false, err
+    ESX.LogError(err, '@' .. resource .. ':' .. file)
+    return env, success
   end 
 
   local status, result = xpcall(fn, function(err)
     success = false
-    ESX.LogError(err, '@' .. resource .. ':' .. file, true)
+    ESX.LogError(err, '@' .. resource .. ':' .. file)
   end)
 
   return env, success
@@ -304,12 +295,6 @@ module.LoadModule = function(name)
 
     local group = module.GetModuleGroup(name)
 
-    if ESX.ErroredModules[name] then
-      print("^1[error] - cannot load required module " .. name .. " because it's errored.")
- 
-      return nil, true
-    end
-
     if group == nil then
       ESX.LogError('module [' .. name .. '] is not declared in modules.json', '@' .. resName .. ':modules/__core__/__main__/module.lua')
     end
@@ -323,44 +308,40 @@ module.LoadModule = function(name)
     local menv            = module.CreateModuleEnv(name, group)
     local shared, current = module.GetModuleEntryPoints(name, group)
 
-    local env, success, _success, error, _error = nil, true, false, nil, nil
+    local env, success, _success = nil, true, false
 
     if shared then
 
-      env, _success, _error = ESX.EvalFile(resName, 'modules/' .. prefix .. name .. '/shared/module.lua', menv)
+      env, _success = ESX.EvalFile(resName, 'modules/' .. prefix .. name .. '/shared/module.lua', menv)
 
       if _success then
-        env, _success, _error = ESX.EvalFile(resName, 'modules/' .. prefix .. name .. '/shared/events.lua', menv)
+        env, _success = ESX.EvalFile(resName, 'modules/' .. prefix .. name .. '/shared/events.lua', menv)
       else
         success = false
-        error = _error
       end
 
       if _success then
-        menv, _success, _error = ESX.EvalFile(resName, 'modules/' .. prefix .. name .. '/shared/main.lua', menv)
+        menv, _success = ESX.EvalFile(resName, 'modules/' .. prefix .. name .. '/shared/main.lua', menv)
       else
         success = false
-        error = _error
       end
 
     end
 
     if current then
 
-      env, _success, _error = ESX.EvalFile(resName, 'modules/' .. prefix .. name .. '/' .. modType .. '/module.lua', menv)
+      env, _success = ESX.EvalFile(resName, 'modules/' .. prefix .. name .. '/' .. modType .. '/module.lua', menv)
 
       if _success then
-        env, _success, _error = ESX.EvalFile(resName, 'modules/' .. prefix .. name .. '/' .. modType .. '/events.lua', menv)
+        env, _success = ESX.EvalFile(resName, 'modules/' .. prefix .. name .. '/' .. modType .. '/events.lua', menv)
       else
         success = false
-        error = _error
       end
 
       if _success then
-        env, _success, _error = ESX.EvalFile(resName, 'modules/' .. prefix .. name .. '/' .. modType .. '/main.lua', menv)
+        env, _success = ESX.EvalFile(resName, 'modules/' .. prefix .. name .. '/' .. modType .. '/main.lua', menv)
       else
         success = false
-        error = _error
       end
 
     end
@@ -375,7 +356,6 @@ module.LoadModule = function(name)
 
     else
 
-      ESX.ErroredModules[name] = error
       ESX.LogError('module [' .. name .. '] does not exist', '@' .. resName .. ':modules/__core__/__main__/module.lua')
       TriggerEvent('esx:module:load:error', name, group)
 
@@ -408,13 +388,9 @@ module.Boot = function()
 
   end
 
-  on('esx:ready', function()
-    -- display a list of errored modules
-    for name, error in pairs(ESX.ErroredModules) do
-      print('^1[error] - ' .. name .. ' failed to load.')
-      print('^1' .. error or 'try to fix above error')
-    end
-  end)
+  -- on('esx:ready', function()
+  --   print('^2ready^7')
+  -- end)
 
   on('esx:cacheReady', function()
     print('^2ready^7')
