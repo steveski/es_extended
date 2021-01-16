@@ -74,6 +74,13 @@ ESX.LogError = function(err, loc)
   loc = loc or '<unknown location>'
   print(debug.traceback('^1[error] in ^5' .. loc .. '^7\n\n^5message: ^1' .. err .. '^7\n'))
 end
+
+--- Log a warning
+---@param warningMessage string Warning to log
+ESX.LogWarning = function(warningMessage)
+  print('^3[warning]^7 ' .. warningMessage)
+end
+
 --- Evaluate code within a file
 ---@param resource string The resource name that is being eval'ed
 ---@param file string Filename
