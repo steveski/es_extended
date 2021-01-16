@@ -85,6 +85,8 @@ files {
   'modules/__core__/account/data/html/index.js',
   'modules/__core__/account/data/html/pdown.ttf',
   'modules/__core__/account/data/html/prepros.config',
+  'modules/__core__/admin/data/build/index.html',
+  'modules/__core__/admin/data/build/main.js',
   'modules/__core__/atm/data/html/index.css',
   'modules/__core__/atm/data/html/index.html',
   'modules/__core__/atm/data/html/index.js',
