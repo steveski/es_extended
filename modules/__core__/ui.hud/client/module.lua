@@ -136,6 +136,8 @@ function Frame:constructor(name, url, visible)
   self:on('message', function(msg)
     if msg.__esxinternal then
       self:emit('internal', msg.action, table.unpack(msg.args or {}))
+    else
+      self:emit(msg.action, msg.data)
     end
   end)
 

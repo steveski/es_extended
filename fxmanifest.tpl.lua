@@ -19,6 +19,14 @@ ui_page_preload 'yes'
 
 lua54 'yes'
 
+ignore {
+  'modules/*/*/data/.moduleignore',
+  'modules/*/*/client/.moduleignore',
+  'modules/*/*/server/.moduleignore',
+  'modules/*/*/shared/.moduleignore',
+  'modules/*/*/.moduleignore'
+}
+
 dependencies {
   'yarn',
   'spawnmanager',
