@@ -26,6 +26,14 @@ dependencies {
   'mysql-async',
 }
 
+ignore {
+    'modules/*/*/data/.moduleignore',
+    'modules/*/*/client/.moduleignore',
+    'modules/*/*/server/.moduleignore',
+    'modules/*/*/shared/.moduleignore',
+    'modules/*/*/.moduleignore'
+}
+
 files {
 
   'data/**/*',
