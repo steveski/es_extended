@@ -54,15 +54,11 @@ const { luaL_requiref } = lauxlib;
 const CFX_MANIFEST_LOADER = `
 CFX_METADATA_KEYS = {}
 CFX_METADATA      = {}
-
 local addMetaData = function(k, v)
-
   if CFX_METADATA[k] == nil then
     CFX_METADATA_KEYS[#CFX_METADATA_KEYS + 1] = k
   end
-
   CFX_METADATA[k] = CFX_METADATA[k] or {}
-
   if type(v) == 'table' then
     for i=1, #v, 1 do
       table.insert(CFX_METADATA[k], v[i])
@@ -70,27 +66,20 @@ local addMetaData = function(k, v)
   else
     table.insert(CFX_METADATA[k], v)
   end
-
 end
-
 local mt = {
   __index = function(t, k)
-
     local raw = rawget(t, k)
-
     if raw then
       return raw
     end
-
     return function(value)
       local newK = k
-
       if type(value) == 'table' then
         -- remove any 's' at the end (client_scripts, ...)
         if k:sub(-1) == 's' then
           newK = k:sub(1, -2)
         end
-
         -- add metadata for each table entry
         for _, v in ipairs(value) do
           addMetaData(newK, v)
@@ -98,7 +87,6 @@ local mt = {
       else
         addMetaData(k, value)
       end
-
       -- for compatibility with legacy things
       return function(v2)
         addMetaData(newK .. '_extra', json.encode(v2))
@@ -106,7 +94,6 @@ local mt = {
     end
   end
 }
-
 _ENV = setmetatable(_G, mt)
 `;
 
@@ -169,10 +156,7 @@ const parseManifest = function (data) {
   return metadata;
 };
 
-const buildManifest = function (data, ignoredFiles) {
-  // .moduleignore
-  delete data["ignore"];
-
+const buildManifest = function (data) {
   data.fx_version = data.fx_version || ["bodacious"];
   data.game = data.game || ["gta5"];
 
@@ -181,15 +165,9 @@ const buildManifest = function (data, ignoredFiles) {
   for (let k in data) {
     const entries = data[k];
 
-    // filter with ignored files
-    const filteredEntries = entries.filter(
-      (entry) => ignoredFiles.indexOf(entry) === -1
-    );
-
-    if (filteredEntries.length === 1)
-      manifest += `${k} '${filteredEntries[0]}'\n\n`;
+    if (entries.length === 1) manifest += `${k} '${entries[0]}'\n\n`;
     else
-      manifest += `${k}s {\n${filteredEntries
+      manifest += `${k}s {\n${entries
         .map((e) => "  '" + e + "'")
         .join(",\n")}\n}\n\n`;
   }
@@ -256,7 +234,8 @@ const init = () => {
     }
   });
 
-  const newManifestLua = buildManifest(newManifest, []);
+  delete newManifest["ignore"];
+  const newManifestLua = buildManifest(newManifest);
 
   if (newManifestLua === oldManifestLua) {
     console.log("^7[^4esx^7] ^2no changes required in fxmanifest.lua^7");
