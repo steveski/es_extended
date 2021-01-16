@@ -222,9 +222,7 @@ KickPlayer:setHandler(function(player, args)
   playerId = args.player.source 
 
   if foundPlayer then
-    if not args.reason then args.reason = "You were kicked by a member of staff." end
-    
-    DropPlayer(playerId, args.reason)
+    module.KickPlayer(playerId, args.reason)
   end
 end)
 

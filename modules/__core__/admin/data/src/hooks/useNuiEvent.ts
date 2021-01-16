@@ -18,7 +18,7 @@ export const useNuiEvent = <T = any>(
     const eventHandler = (event: MessageEvent<any>) => {
       const { data } = event;
 
-      console.log(JSON.stringify(data));
+      console.log(data);
 
       if (data.action === action) {
         handler(data);
@@ -32,8 +32,9 @@ export const useNuiEvent = <T = any>(
   const emulate = useCallback(
     (data) => {
       const messageEvent = new MessageEvent("message", {
-        data: { ...data, action },
+        data: { data, action },
       });
+      console.log(messageEvent.data);
       window.dispatchEvent(messageEvent);
     },
     [handler, action]

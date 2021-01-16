@@ -15,6 +15,7 @@ local input = M('input')
 M('ui.hud')
 
 module.Frame = nil
+module.isOpeningAdminMenu = false
 
 module.OnSelfCommand = function(action, ...)
   module[action](...)
@@ -22,22 +23,60 @@ end
 
 module.Init = function()
   input.RegisterControl(input.Groups.MOVE, input.Controls.REPLAY_START_STOP_RECORDING_SECONDARY)
-  input.On('released', input.Groups.MOVE, input.Controls.REPLAY_START_STOP_RECORDING_SECONDARY, module.openMenu)
+  input.On('released', input.Groups.MOVE, input.Controls.REPLAY_START_STOP_RECORDING_SECONDARY, module.openAdminMenu)
+  
   module.Frame = Frame('admin', 'nui://' .. __RESOURCE__ .. '/modules/__core__/admin/data/build/index.html', false)
-  module.Frame:on('close', function(msg)
-    module.closeMenu()
+  
+  module.Frame:on('close', function()
+    module.closeAdminMenu()
+  end)
+
+  module.Frame:on('kick', function(data)
+    module.KickPlayer(data.id, data.reason)
+  end)
+
+  module.Frame:on('ban', function(data)
+    module.BanPlayer(data.id, data.reason)
   end)
 end
 
-module.openMenu = function()
-  print("Open Menu")
-  module.Frame:show()
-  module.Frame:focus(true)
+module.openAdminMenu = function()
+  -- @TODO: do not continue further if client knows player isn't admin
+  
+  -- if we're already loading players, exit
+  if module.isOpening then
+    return
+  end
+
+  module.isOpeningAdminMenu = true
+  request("esx:admin:getPlayers", function(players)
+    if not(players == nil) then
+
+      module.Frame:postMessage({
+        action = 'updatePlayers',
+        -- @TODO: only map properties that are required on the ui side
+        -- for now, we're sending all the datas we have on player
+        data = players
+      })
+
+      module.Frame:show()
+      module.Frame:focus(true)
+    end
+    module.isOpeningAdminMenu = false
+  end)
 end
 
-module.closeMenu = function()
+module.closeAdminMenu = function()
   module.Frame:hide()
   module.Frame:unfocus()
+end
+
+module.KickPlayer = function(playerId, reason)
+  emitServer("esx:admin:kickPlayer", playerId, reason)
+end
+
+module.BanPlayer = function(playerId, reason)
+  emitServer("esx:admin:banPlayer", playerId, reason)
 end
 
 module.SpawnProp = function(sourceId, propname)

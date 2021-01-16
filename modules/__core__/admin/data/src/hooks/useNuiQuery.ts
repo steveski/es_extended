@@ -14,17 +14,20 @@ export const useNuiQuery = (action: string) => {
   }, []);
 
   const query = useCallback(
-    (payload: unknown) => {
+    (payload?: unknown) => {
       if (isBrowser) {
         console.log(`[MOCK FETCH CALL] - ${action}`, payload);
         return;
       }
 
       // Todo make this promised. The other frame should responde with an event I guess ?
-      return window.parent.postMessage({ action: action, data: payload }, "*");
+      return window.parent.postMessage(
+        { action: action, data: payload || {} },
+        "*"
+      );
     },
     [action, isBrowser]
   );
 
-  return { query };
+  return [query];
 };

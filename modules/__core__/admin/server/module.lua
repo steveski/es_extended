@@ -21,3 +21,16 @@ module.GetPlayerCoords = function(playerId)
 		return nil
 	end
 end
+
+module.KickPlayer = function(playerId, reason)
+	reason = reason or "You were kicked by a staff member."
+
+	DropPlayer(tostring(playerId), reason)
+end
+
+module.BanPlayer = function(playerId, reason)
+	reason = reason or "You were banned by a staff member."
+
+	-- @TODO: ban player = kick + ban entry list
+	DropPlayer(tostring(playerId), reason)
+end
