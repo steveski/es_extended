@@ -173,8 +173,6 @@ const buildManifest = function (data, ignoredFiles) {
   // .moduleignore
   delete data["ignore"];
 
-  console.log(ignoredFiles);
-
   data.fx_version = data.fx_version || ["bodacious"];
   data.game = data.game || ["gta5"];
 
@@ -235,7 +233,6 @@ const init = () => {
       );
 
       if (entryModuleIgnoresFilesPath.length > 0) {
-        console.log(entryModuleIgnoresFilesPath);
         entryModuleIgnoresFilesPath.map((entryModuleIgnoresFilePath) => {
           const fromRootModuleIgnoreFilePath = path.resolve(
             path.join(root, RESOURCE_NAME, entryModuleIgnoresFilePath)
