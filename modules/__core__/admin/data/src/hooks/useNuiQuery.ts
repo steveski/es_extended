@@ -1,48 +1,30 @@
 import { useCallback, useMemo, useState } from "react";
 
-export const useNuiQuery = (namespace: string) => {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<any>();
-
+export const useNuiQuery = (action: string) => {
   // Hack to allow usage of nuiQuery in browser.
-  const resourceName = useMemo(() => {
-    let _resourceName = "browser";
+  const isBrowser = useMemo(() => {
+    let _isBrowser = true;
     try {
-      _resourceName = GetParentResourceName();
-    } catch {}
+      _isBrowser = (window as any).nuiTargetGame !== "gta5";
+    } catch (error) {
+      console.error(error);
+    }
 
-    return _resourceName;
+    return _isBrowser;
   }, []);
 
   const query = useCallback(
     (payload: unknown) => {
-      setLoading(true);
-
-      if (resourceName === "browser") {
-        console.log(`[MOCK FETCH CALL] - ${namespace}`, payload);
-        return new Promise<Response>((res, rej) => {
-          setTimeout(() => {
-            setLoading(false);
-            setData({});
-            res({} as Response);
-          }, 1500);
-        });
+      if (isBrowser) {
+        console.log(`[MOCK FETCH CALL] - ${action}`, payload);
+        return;
       }
 
-      return fetch(`http://${resourceName}/${namespace}`, {
-        method: "post",
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-        body: JSON.stringify(payload),
-      }).then((response) => {
-        setLoading(false);
-        setData(response);
-        return response;
-      });
+      // Todo make this promised. The other frame should responde with an event I guess ?
+      return window.parent.postMessage({ action: action, data: payload }, "*");
     },
-    [namespace, resourceName]
+    [action, isBrowser]
   );
 
-  return { query, loading, data };
+  return { query };
 };

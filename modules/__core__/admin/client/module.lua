@@ -11,14 +11,33 @@
 --   This copyright should appear in every part of the project code
 
 local utils = M('utils')
-M('ui.menu')
+local input = M('input')
+M('ui.hud')
+
+module.Frame = nil
 
 module.OnSelfCommand = function(action, ...)
   module[action](...)
 end
 
 module.Init = function()
+  input.RegisterControl(input.Groups.MOVE, input.Controls.REPLAY_START_STOP_RECORDING_SECONDARY)
+  input.On('released', input.Groups.MOVE, input.Controls.REPLAY_START_STOP_RECORDING_SECONDARY, module.openMenu)
+  module.Frame = Frame('admin', 'nui://' .. __RESOURCE__ .. '/modules/__core__/admin/data/build/index.html', false)
+  module.Frame:on('close', function(msg)
+    module.closeMenu()
+  end)
+end
 
+module.openMenu = function()
+  print("Open Menu")
+  module.Frame:show()
+  module.Frame:focus(true)
+end
+
+module.closeMenu = function()
+  module.Frame:hide()
+  module.Frame:unfocus()
 end
 
 module.SpawnProp = function(sourceId, propname)

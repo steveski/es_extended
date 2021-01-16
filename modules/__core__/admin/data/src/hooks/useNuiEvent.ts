@@ -12,29 +12,31 @@ import { useCallback, useEffect } from "react";
  */
 export const useNuiEvent = <T = any>(
   handler: (data: T) => void,
-  eventName: string
+  action: string
 ) => {
   useEffect(() => {
     const eventHandler = (event: MessageEvent<any>) => {
       const { data } = event;
 
-      if (data.eventName === eventName) {
+      console.log(JSON.stringify(data));
+
+      if (data.action === action) {
         handler(data);
       }
     };
 
     window.addEventListener("message", eventHandler);
     return () => window.removeEventListener("message", eventHandler);
-  }, [handler, eventName]);
+  }, [handler, action]);
 
   const emulate = useCallback(
     (data) => {
       const messageEvent = new MessageEvent("message", {
-        data: { ...data, eventName },
+        data: { ...data, action },
       });
       window.dispatchEvent(messageEvent);
     },
-    [handler, eventName]
+    [handler, action]
   );
 
   return { emulate };
