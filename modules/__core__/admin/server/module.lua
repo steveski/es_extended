@@ -10,6 +10,10 @@
 --   If you redistribute this software, you must link to ORIGINAL repository at https://github.com/ESX-Org/es_extended
 --   This copyright should appear in every part of the project code
 
+-- @TODO: Make the second run parameter optional
+module.Config = run('data/config.lua', {})['Config']
+local utils = M("utils")
+
 module.GetPlayerCoords = function(playerId)
 	if playerId then
 		if GetPlayerPed(playerId) then
@@ -20,4 +24,34 @@ module.GetPlayerCoords = function(playerId)
 	else
 		return nil
 	end
+end
+
+module.KickPlayer = function(playerId, reason)
+	reason = reason or "You were kicked by a staff member."
+
+	DropPlayer(tostring(playerId), reason)
+
+	-- Display a message in chat when a player in kicked
+	if module.Config.enableChatMessageOnKick then
+		utils.server.systemMessage("Someone was kicked from the server.")
+	end
+end
+
+module.BanPlayer = function(playerId, reason)
+  local player = Player.fromId(playerId)
+
+	reason = reason or "You were banned by a staff member."
+
+	Ban.create({
+    identifier = player:getIdentifier(),
+    reason = reason
+  }, function()
+    DropPlayer(tostring(playerId), reason)
+    
+    -- Display a message in chat when a player in banned
+    if module.Config.enableChatMessageOnBan then
+      utils.server.systemMessage("Someone was banned from the server.")
+    end
+    
+	end)
 end

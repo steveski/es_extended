@@ -22,6 +22,7 @@ addRoleCommand:setHandler(function(player, args)
   local targetPlayer = args.targetPlayer
 
   targetPlayer:addRole(role)
+  targetPlayer:save()
 end)
 
 local deleteRoleCommand = Command("delrole", "admin", "Delete a role from a player")
@@ -34,6 +35,7 @@ deleteRoleCommand:setHandler(function(player, args)
   local targetPlayer = args.targetPlayer
 
   targetPlayer:removeRole(role)
+  targetPlayer:save()
 end)
 
 addRoleCommand:register()
