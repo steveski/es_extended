@@ -29,5 +29,6 @@
     "ui.hud",
     "ui.menu",
     "utils",
-    "vehicles"
+    "vehicles",
+    "connect"
 ]

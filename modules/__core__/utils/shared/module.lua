@@ -20,7 +20,6 @@ module.game    = module.game    or {}
 module.vehicle = module.vehicle or {}
 module.random  = module.random  or {}
 module.time    = module.time    or {}
-module.game    = module.game    or {}
 
 -- Locals
 local printableChars = {}

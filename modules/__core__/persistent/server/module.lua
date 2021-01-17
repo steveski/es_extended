@@ -160,17 +160,21 @@ Persist = function(schema, pk, ...)
 
   end
 
+  pType.create = function(data, cb)
+    local instance = pType(data)
+
+    instance:save(function(id)
+      cb(instance)
+    end)
+  end
+
   pType.ensure = function(query, data, cb)
 
     pType.findOne(query, function(instance)
 
       if instance == nil then
 
-        local instance = pType(data)
-
-        instance:save(function(id)
-          cb(instance)
-        end)
+        pType.create(data, cb)
 
       else
 
