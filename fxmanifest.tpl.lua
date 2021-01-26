@@ -16,6 +16,8 @@ description     'ESX'
 version         '2.0.1'
 ui_page         'hud/index.html'
 ui_page_preload 'yes'
+loadscreen 'loadscreen/data/index.html'
+loadscreen_manual_shutdown 'yes'
 
 lua54 'yes'
 
@@ -46,7 +48,7 @@ files {
 
   'data/**/*',
   'hud/**/*',
-
+  'loadscreen/**/*',
   'config/**/*.json',
   'modules/*/modules.json',
   'modules/*/*/data/**/*',

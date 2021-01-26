@@ -10,6 +10,10 @@ ui_page 'hud/index.html'
 
 ui_page_preload 'yes'
 
+loadscreen 'loadscreen/data/index.html'
+
+loadscreen_manual_shutdown 'yes'
+
 lua54 'yes'
 
 dependencies {
@@ -29,6 +33,13 @@ files {
   'hud/app.js',
   'hud/index.html',
   'hud/wrapper.js',
+  'loadscreen/data/css/index.css',
+  'loadscreen/data/index.html',
+  'loadscreen/data/js/index.js',
+  'loadscreen/data/vid/esx_intro.mp4',
+  'loadscreen/data/vid/esx_intro.webm',
+  'loadscreen/data/vid/esx_loop.mp4',
+  'loadscreen/data/vid/esx_loop.webm',
   'config/modules.groups.json',
   'modules/__base__/modules.json',
   'modules/__core__/modules.json',
