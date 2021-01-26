@@ -246,6 +246,25 @@ module.game.requestModel = function(model, cb)
 
 end
 
+module.game.requestAnimDict = function(model, cb)
+  if type(model) == 'string' then
+
+    local interval
+
+    RequestAnimDict(model)
+
+    interval = ESX.SetInterval(50, function()
+      if HasAnimDictLoaded(model) then
+        ESX.ClearInterval(interval)
+
+        if cb ~= nil then
+          cb()
+        end
+      end
+    end)
+  end
+end
+
 module.game.teleport = function(entity, coords)
   if DoesEntityExist(entity) then
     RequestCollisionAtCoord(coords.x, coords.y, coords.z)
@@ -761,6 +780,10 @@ end
 
 module.game.RequestAnimSet = function(dict)
   RequestAnimSet(dict)
+end
+
+module.game.RequestAnimDict = function(dict)
+
 end
 
 module.game.StartAttitude = function(lib, anim)
