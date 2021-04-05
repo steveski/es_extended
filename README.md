@@ -1,9 +1,9 @@
-# ESX 2 | WIP 
+# ESX2 | WIP 
 
 ### THIS IS WIP, DO NOT USE UNLESS YOU ARE AN EXPERIENCED DEVELOPER
-###  Need the correct Version? => https://github.com/ESX-Org/es_extended/tree/v1-final
+###  Need The Correct Version? => https://github.com/ESX-Org/es_extended/tree/v1-final
 
-### How to run latest ESX
+### How to run ESX2
 
 ```
 # minimum resources and config to get it working
