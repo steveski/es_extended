@@ -1,8 +1,9 @@
-# ESX 2
+# ESX2 | WIP 
 
-### Sill looking for old version ? => https://github.com/ESX-Org/es_extended/tree/v1-final
+### THIS IS WIP, DO NOT USE UNLESS YOU ARE AN EXPERIENCED DEVELOPER
+###  Need The Correct Version? => https://github.com/ESX-Org/es_extended/tree/v1-final
 
-### How to run latest ESX
+### How to run ESX2
 
 ```
 # minimum resources and config to get it working
@@ -139,50 +140,6 @@ on('esx:db:init', function(initTable, extendTable)
   })
 
 end)
-```
-
-```lua
--- Want to create faction system ?
-
-M('player')
-
-xPlayer.createDBAccessor('faction', {name = 'faction', type = 'VARCHAR', length = 64, default = 'gang.ballas', extra = nil})
-
--- Now any player (which is instance of xPlayer) have the following methods
--- Also user table has now a faction column added automatically
-
-local player = xPlayer:fromId(2)
-
-print(player:getFaction())
-
-player:setFaction('another.faction')
-
-player:save()
-```
-
-```lua
--- I want to store JSON :(
--- No problem
-
-xPlayer.createDBAccessor('someData', {name = 'some_data', type = 'TEXT', length = nil, default = '{}', extra = nil}, json.encode, json.decode)
-```
-
-```lua
--- I want to store WHATEVER (comma-separated list for example) :(
--- No problem
-
-M('string')
-
-xPlayer.createDBAccessor(
-  'someWeirdData',
-  {name = 'some_weird_data', type = 'TEXT', length = nil, default = '1,2,3,4,5', extra = nil},
-  function(x) -- encode
-    return table.concat(x, ',')
-  end,
-  function(x) -- decode
-    return string.split(x, ',')
-  end
-)
 ```
 
 ## Want to contribute? <a name="contributions"></a>
