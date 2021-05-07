@@ -533,8 +533,20 @@ function DBTable:ensure()
 
 end
 
+--- @class DatabaseSchema
+--- @field name string
+--- @field type string
+--- @field length number | nil
+--- @field default string | nil
+--- @field extra string | nil
+
 module.DBTable = DBTable
 
+--- Initialize a new table
+---@param name string The name of the table to register
+---@param pk string A primary key that corresponds to the name of one of the field names
+---@param fields DatabaseSchema A table with the database schema
+---@param rows table An array of row that match the database schema to be inserted
 module.InitTable = function(name, pk, fields, rows)
 
   rows      = rows or {}
@@ -556,11 +568,12 @@ module.InitTable = function(name, pk, fields, rows)
   end)
 
 end
-
+--- Extends an existing table with new fields
+---@param name string The name of the table to extend
+---@param fields DatabaseSchema A table with the database schema to extend
 module.ExtendTable = function(name, fields)
 
   local tbl           = module.Tables[name]
-  local fieldNamesStr = ''
 
   for i=1, #fields, 1 do
     local field = fields[i]
@@ -568,7 +581,8 @@ module.ExtendTable = function(name, fields)
   end
 
 end
-
-module.GetFieldNames = function(tableName)
-  return module.Tables[tableName]:fieldNames()
+--- Returns the existing schema for a given table
+---@param name string The name of the table
+module.GetFieldNames = function(name)
+  return module.Tables[name]:fieldNames()
 end
