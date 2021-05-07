@@ -11,6 +11,8 @@
 --   This copyright should appear in every part of the project code
 
 -- Immediate definitions
+-- Micro Optimizations
+local clock = os.clock
 
 local __print = print
 --- Altered print with ESX prefix
@@ -43,6 +45,7 @@ print = function(...)
   _print(str)
 
 end
+
 --- Local index of check
 local tableIndexOf = function(t, val)
 
@@ -63,6 +66,24 @@ ESX.Ready          = false
 ESX.Modules        = {}
 ESX.TaskCount      = 1
 ESX.CancelledTasks = {}
+
+-- NOTE: Could probably make this API a little nicer and
+if (IsDuplicityVersion()) then
+  --- Start a debug timer
+  --- @return number Time execution started, pass this to TimeEnd
+  ESX.TimeStart = function()
+    local timerStart = clock()
+    return timerStart
+  end
+  --- End a timer and print the result
+  --- @param startTime number Start time as returned by ESX.TimeStart
+  --- @return void
+  ESX.TimeEnd = function (startTime)
+    local endTime = clock()
+    local elapsed =  endTime - startTime
+    print('^2[DEBUG]^0' .. ' executed in ' .. elapsed .. 's')
+  end
+end
 
 ESX.GetConfig = function()
   return Config
@@ -97,7 +118,7 @@ ESX.EvalFile = function(resource, file, env)
   if (err) then
     ESX.LogError(err, '@' .. resource .. ':' .. file)
     return env, success
-  end 
+  end
 
   local status, result = xpcall(fn, function(err)
     success = false
