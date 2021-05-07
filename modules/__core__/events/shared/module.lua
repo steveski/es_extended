@@ -194,17 +194,15 @@ onRequest = function(name, cb)
   module.requestCallbacks[name] = cb
 end
 
---- Base EventEmitter class
----@class EventEmitter
----@field constructor
----@field on
----@field off
+--- @class EventEmitter
+--- @return EventEmitter
 EventEmitter = Extends(nil, 'EventEmitter')
 
 --- Constructor for EventEmitter class
 function EventEmitter:constructor()
   self.handlers = {}
 end
+
 --- Registers an event listener for an event on a EventEmitter
 --- @param name string The name of the event
 --- @param cb function The callback function
