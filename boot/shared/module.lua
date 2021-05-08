@@ -11,8 +11,6 @@
 --   This copyright should appear in every part of the project code
 
 -- Immediate definitions
--- Micro Optimizations
-local clock = os.clock
 
 local __print = print
 --- Altered print with ESX prefix
@@ -69,6 +67,9 @@ ESX.CancelledTasks = {}
 
 -- NOTE: Could probably make this API a little nicer and
 if (IsDuplicityVersion()) then
+  -- Micro Optimizations
+  local clock = os.clock
+  
   --- Start a debug timer
   --- @return number Time execution started, pass this to TimeEnd
   ESX.TimeStart = function()
