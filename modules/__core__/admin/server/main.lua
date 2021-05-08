@@ -62,8 +62,10 @@ SpawnVehicleCommand:addArgument("modelname", "string", _U('admin_command_car_has
 SpawnVehicleCommand:setHandler(function(player, args)
 
   if IsPlayerAceAllowed(player.source, 'command') then
-    local playerCoords = GetEntityCoords(GetPlayerPed(player.source))
-    utils.game.createVehicle(args.modelname, playerCoords, function(vehicle)
+    local playerPed = GetPlayerPed(player.source)
+    local playerCoords = GetEntityCoords(playerPed)
+    local playerHeading = GetEntityHeading(playerPed)
+    utils.game.createVehicle(args.modelname, playerCoords, playerHeading, function(vehicle)
       -- warp player to vehicle
 
       while not DoesEntityExist(vehicle) do

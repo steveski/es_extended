@@ -13,14 +13,14 @@
 module.PlayersToHide = {}
 module.server = module.server or {}
 
-module.game.createVehicle = function (model, coords, cb)
+module.game.createVehicle = function (model, coords, heading, cb)
   if type(model) == 'string' then
     model = GetHashKey(model)
   end
 
   local CREATE_AUTOMOBILE = GetHashKey('CREATE_AUTOMOBILE')
 
-	local vehicle = Citizen.InvokeNative(CREATE_AUTOMOBILE, model, coords)
+	local vehicle = Citizen.InvokeNative(CREATE_AUTOMOBILE, model, coords, heading)
 
   if vehicle and cb then
     cb(vehicle)
