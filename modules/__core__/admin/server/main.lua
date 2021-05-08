@@ -67,11 +67,6 @@ SpawnVehicleCommand:setHandler(function(player, args)
     local playerHeading = GetEntityHeading(playerPed)
     utils.game.createVehicle(args.modelname, playerCoords, playerHeading, function(vehicle)
       -- warp player to vehicle
-
-      while not DoesEntityExist(vehicle) do
-        Wait(0)
-      end
-
       local networkId = NetworkGetNetworkIdFromEntity(vehicle)
       emitClient("esx:admin:inPlayerCommand", player.source, "WarpPlayerIntoVehicle", networkId)
     end)

@@ -22,6 +22,14 @@ module.game.createVehicle = function (model, coords, heading, cb)
 
 	local vehicle = Citizen.InvokeNative(CREATE_AUTOMOBILE, model, coords, heading)
 
+  local interval
+
+  interval = ESX.SetInterval(0, function()
+    if DoesEntityExist(vehicle) then
+      ESX.ClearInterval(interval)
+    end
+  end)
+
   if vehicle and cb then
     cb(vehicle)
   end
