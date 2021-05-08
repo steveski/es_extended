@@ -60,7 +60,20 @@ end)
 local SpawnVehicleCommand = Command("car", "admin", _U('admin_command_car'))
 SpawnVehicleCommand:addArgument("modelname", "string", _U('admin_command_car_hashname'))
 SpawnVehicleCommand:setHandler(function(player, args)
-  emitClient("esx:admin:inPlayerCommand", player.source, "SpawnVehicle", player.source, args.modelname)
+
+  if IsPlayerAceAllowed(player.source, 'command') then
+    local playerCoords = GetEntityCoords(GetPlayerPed(player.source))
+    utils.game.createVehicle(args.modelname, playerCoords, function(vehicle)
+      -- warp player to vehicle
+
+      while not DoesEntityExist(vehicle) do
+        Wait(0)
+      end
+
+      local networkId = NetworkGetNetworkIdFromEntity(vehicle)
+      emitClient("esx:admin:inPlayerCommand", player.source, "WarpPlayerIntoVehicle", networkId)
+    end)
+  end
 end)
 
 local DeleteVehicleCommand = Command("dv", "admin", _U('admin_command_cardel'))

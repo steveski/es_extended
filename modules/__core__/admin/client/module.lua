@@ -161,6 +161,19 @@ module.TeleportToCoords = function(sourceId, x, y, z)
   end, sourceId)
 end
 
+module.WarpPlayerIntoVehicle = function(networkId)
+
+  while not NetworkDoesEntityExistWithNetworkId(networkId) do
+    Wait(0)
+  end
+
+  local vehicle = NetworkGetEntityFromNetworkId(networkId)
+
+  if IsEntityAVehicle(vehicle) then
+    TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
+  end
+end
+
 module.SpawnVehicle = function(sourceId, vehicleName)
   request("esx:admin:isAuthorized", function(a)
     if not a then return end
