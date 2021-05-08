@@ -12,7 +12,5 @@
 
 local module = ESX.Modules['boot']
 
-if not IsDuplicityVersion() then
-  module.Boot()
-end
+module.Boot()
 
