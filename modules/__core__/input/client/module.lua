@@ -13,12 +13,203 @@
 M('table')
 local Menu = M('ui.menu')
 
-module.RegisteredControls   = {}
-module.EnabledControls      = {}
-module.LastPressed          = {}
-module.LastDisabledPressed  = {}
-module.LastReleased         = {}
+module.RegisteredControls = {}
+module.EnabledControls = {}
+module.LastPressed = {}
+module.LastDisabledPressed = {}
+module.LastReleased = {}
 module.LastDisabledReleased = {}
+module.RegisteredKeyHandlers = {}
+
+module.KeyBindings = {
+  BACK = 'BACK',
+  TAB = 'TAB',
+  PAUSE = 'PAUSE',
+  CAPITAL = 'CAPITAL',
+  ESCAPE = 'ESCAPE',
+  SPACE = 'SPACE',
+  PAGEUP = 'PAGEUP',
+  PRIOR = 'PRIOR',
+  PAGEDOWN = 'PAGEDOWN',
+  END = 'END',
+  HOME = 'HOME',
+  LEFT = 'LEFT',
+  UP = 'UP',
+  RIGHT = 'RIGHT',
+  DOWN = 'DOWN',
+  PRINTSCR = 'SNAPSHOT',
+  INSERT = 'INSERT',
+  DELETE = 'DELETE',
+  ZERO = '0',
+  ONE = '1',
+  TWO = '2',
+  THREE = '3',
+  FOUR = '4',
+  FIVE = '5',
+  SIX = '6',
+  SEVEN = '7',
+  EIGHT = '8',
+  NINE = '9',
+  A = 'A',
+  B = 'B',
+  C = 'C',
+  D = 'D',
+  E = 'E',
+  F = 'F',
+  G = 'G',
+  H = 'H',
+  I = 'I',
+  J = 'J',
+  K = 'K',
+  L = 'L',
+  M = 'M',
+  N = 'N',
+  O = 'O',
+  P = 'P',
+  Q = 'Q',
+  R = 'R',
+  S = 'S',
+  T = 'T',
+  U = 'U',
+  V = 'V',
+  W = 'W',
+  X = 'X',
+  Y = 'Y',
+  Z = 'Z',
+  LWIN = 'LWIN',
+  RWIN = 'RWIN',
+  APPS = 'APPS',
+  NUMPAD0 = 'NUMPAD0',
+  NUMPAD1 = 'NUMPAD1',
+  NUMPAD2 = 'NUMPAD2',
+  NUMPAD3 = 'NUMPAD3',
+  NUMPAD4 = 'NUMPAD4',
+  NUMPAD5 = 'NUMPAD5',
+  NUMPAD6 = 'NUMPAD6',
+  NUMPAD7 = 'NUMPAD7',
+  NUMPAD8 = 'NUMPAD8',
+  NUMPAD9 = 'NUMPAD9',
+  NUMPADMULTIPLY = 'MULTIPLY',
+  NUMPADPLUS = 'ADD',
+  NUMPADSUBTRACT = 'SUBTRACT',
+  NUMPADDECIMAL = 'DECIMAL',
+  NUMPADSLASH = 'DIVIDE',
+  NUMPADEQUALS = 'NUMPADEQUALS',
+  NUMPADENTER = 'NUMPADENTER',
+  F1 = 'F1',
+  F2 = 'F2',
+  F3 = 'F3',
+  F4 = 'F4',
+  F5 = 'F5',
+  F6 = 'F6',
+  F7 = 'F7',
+  F8 = 'F8',
+  F9 = 'F9',
+  F10 = 'F10',
+  F11 = 'F11',
+  F12 = 'F12',
+  F13 = 'F13',
+  F14 = 'F14',
+  F15 = 'F15',
+  F16 = 'F16',
+  F17 = 'F17',
+  F18 = 'F18',
+  F19 = 'F19',
+  F20 = 'F20',
+  F21 = 'F21',
+  F22 = 'F22',
+  F23 = 'F23',
+  F24 = 'F24',
+  NUMLOCK = 'NUMLOCK',
+  SCROLL = 'SCROLL',
+  LSHIFT = 'LSHIFT',
+  RSHIFT = 'RSHIFT',
+  LCONTROL = 'LCONTROL',
+  RCONTROL = 'RCONTROL',
+  LALT = 'LMENU',
+  RALT = 'RMENU',
+  SEMICOLON = 'SEMICOLON',
+  EQUALS = 'EQUALS',
+  PLUS = 'PLUS',
+  COMMA = 'COMMA',
+  MINUS = 'MINUS',
+  PERIOD = 'PERIOD',
+  BACKSLASH = 'BACKSLASH',
+  GRAVE = 'GRAVE',
+  LBRACKET = 'LBRACKET',
+  BACKSLASH = 'BACKSLASH',
+  RBRACKET = 'RBRACKET',
+  APOSTROPHE = 'APOSTROPHE',
+}
+
+--- @class KeyInput : EventEmitter
+--- @param key string The key you would like to target
+--- @param description string The description for this input
+--- @param isPressedDetection boolean Whether to listen to onPress & onRelease
+--- @return KeyInput
+KeyInput = Extends(EventEmitter, 'KeyInput')
+
+function KeyInput:constructor(key, description, isPressedDetection)
+  if not key then
+    error('You must pass key to the constructor')
+  end
+
+  if not description then
+    error('You must pass description to the constructor')
+  end
+
+  local keyExists = table.find(module.RegisteredKeyHandlers, function(inputInstance)
+    return inputInstance.key == key
+  end)
+
+  if keyExists then
+    error(('The key [%s] already has been registered with the description [%s]'):format(key, keyExists.description))
+  end
+
+  self.super:ctor()
+
+  self.key = key
+  self.description = description
+  self.isPressedDetection = isPressedDetection or false
+
+  local prefix = isPressedDetection and '+' or ''
+  RegisterKeyMapping(prefix .. ':__input:' .. key, description, 'keyboard', key)
+  module.RegisteredKeyHandlers[#module.RegisteredKeyHandlers + 1] = self
+end
+
+--- A handler for a KeyInput where press detection is false
+--- this function will only be called once on the initial key press
+--- @param cb function Callback function to call
+function KeyInput:handler(cb)
+  if self.isPressedDetection then
+    error(('The key [%s] is listening for press & release!, use onPressed & onReleased methods'):format(self.key))
+  end
+
+  RegisterCommand(':__input:' .. self.key, cb)
+end
+
+--- A handler for a KeyInput where press detection is true and the
+--- key is pressed. This will trigger once when the key is first pressed
+--- down.
+--- @param cb function Callback function to call
+function KeyInput:onPress(cb)
+  if not self.isPressedDetection then
+    error(('The key [%s] is not listening for press & release!, use handler method'):format(self.key))
+  end
+
+  RegisterCommand('+:__input:' .. self.key, cb)
+end
+
+--- A handler for a KeyInput where press detection is true and the
+--- key is released. This will trigger once when the key is released.
+---@param cb function Callback function to call
+function KeyInput:onRelease(cb)
+  if not self.isPressedDetection then
+    error(('The key [%s] is not listening for press & release!, use handler method'):format(self.key))
+  end
+
+  RegisterCommand('-:__input:' .. self.key, cb)
+end
 
 module.Groups = {
   MOVE                   = 0,
@@ -404,42 +595,51 @@ module.Controls = {
   INPUT_REPLAY_SNAPMATIC_PHOTO          = 345,
 }
 
+--- @deprecated
 module.RegisterControl = function(group, id)
   if table.indexOf(module.RegisteredControls[group], id) == -1 then
     module.RegisteredControls[group][#module.RegisteredControls[group] + 1] = id
   end
 end
 
+--- @deprecated
 module.UnregisterControl = function(group, id)
   if table.indexOf(module.RegisteredControls[group], id) ~= -1 then
     table.remove(module.RegisteredControls[group], table.indexOf(module.RegisteredControls[group], id))
   end
 end
 
+--- @deprecated
 module.EnableControl = function(group, id)
   module.EnabledControls[group][id] = module.EnabledControls[group][id] + 1
 end
 
+--- @deprecated
 module.DisableControl = function(group, id)
   module.EnabledControls[group][id] = module.EnabledControls[group][id] - 1
 end
 
+--- @deprecated
 module.IsControlRegistered = function(group, id)
   return table.indexOf(module.RegisteredControls[group], id) ~= -1
 end
 
+--- @deprecated
 module.IsControlPressed = function(group, id)
   return module.IsControlEnabled(group, id) and (IsControlPressed(group, id))
 end
 
+--- @deprecated
 module.IsDisabledControlPressed = function(group, id)
   return (not module.IsControlEnabled(group, id)) and (IsDisabledControlPressed(group, id))
 end
 
+--- @deprecated
 module.IsControlEnabled = function(group, id)
   return module.EnabledControls[group][id] >= 0
 end
 
+--- @deprecated
 for k1, group in pairs(module.Groups) do
 
   module.RegisteredControls[group]   = {}
@@ -459,9 +659,10 @@ for k1, group in pairs(module.Groups) do
 
 end
 
+--- @deprecated
 module.On = function(event, group, id, cb)
 
-  return on('esx:input:' .. event .. ':' .. group .. ':'  .. id, cb)
+  return on('esx:input:' .. event .. ':' .. group .. ':' .. id, cb)
 
 end
 
@@ -472,7 +673,7 @@ module.InitESX = function()
     if Menu.IsOpen ~= nil then
 			if (not ESX.IsDead) and (not Menu.IsOpen('default', 'es_extended', 'inventory')) then
 			  ESX.ShowInventory()
-			end	
+			end
 		end
   end)
 end
