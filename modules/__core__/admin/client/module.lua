@@ -55,13 +55,13 @@ module.openAdminMenu = function()
       if not(players == nil) then
         -- map properties that are required, maybe there's a better way to do this (?)
         local dataTable = {}
-        for k,v in pairs(players) do
-          table.insert(dataTable, {
-            name = v.name,
-            identity = v.identity,
-            source = v.source,
-            identifier = v.identifier
-          })
+        for i, v in ipairs(players) do
+          dataTable[i] = {
+            name        = v.name,
+            identity    = v.identity,
+            source      = v.source,
+            identifier  = v.identifier
+          }
         end
 
         module.Frame:postMessage({
