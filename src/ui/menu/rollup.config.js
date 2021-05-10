@@ -10,7 +10,6 @@
 //   If you redistribute this software, you must link to ORIGINAL repository at https://github.com/ESX-Org/es_extended
 //   This copyright should appear in every part of the project code
 
-import path          from 'path';
 import svelte        from 'rollup-plugin-svelte';
 import resolve       from '@rollup/plugin-node-resolve';
 import commonjs      from '@rollup/plugin-commonjs';

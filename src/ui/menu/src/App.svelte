@@ -27,7 +27,6 @@
 	let el     = null;
 
 	window.addEventListener('message', e => {
-		
 		const msg = e.data;
 
 		switch(msg.action) {
@@ -94,7 +93,7 @@
 		_items = [..._items];
 
   }
-	
+
 	const onMouseEnter= (e) => {
 		window.parent.postMessage({action: 'mouse.in'}, '*');
 	}
@@ -230,7 +229,7 @@
 		border-radius: 10px;
     width: 320px;
     max-width: calc(100vh - 50px);
-    max-height: calc(100vh - 50px);
+    max-height: 50vh;
     overflow-y: auto;
   }
 
@@ -247,7 +246,7 @@
 
 	main > main-wrap::-webkit-scrollbar-thumb {
 		border-radius: 10px;
-		background-color: rgba(255, 255, 255, 0.75);
+		background-color: rgba(54, 54, 54, 0.75);
 	}
 
 
