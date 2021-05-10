@@ -13,7 +13,7 @@
 M('events')
 M('ui.hud')
 
-module.Frame = Frame('hud', 'nui://' .. __RESOURCE__ .. '/modules/__core__/game.hud/data/html/ui.html')
+module.Frame = Frame('hud', 'https://cfx-nui-' .. __RESOURCE__ .. '/modules/__core__/game.hud/data/html/ui.html')
 
 module.Frame:on('load', function()
   module.Ready = true

@@ -10,7 +10,7 @@
 --   If you redistribute this software, you must link to ORIGINAL repository at https://github.com/ESX-Org/es_extended
 --   This copyright should appear in every part of the project code
 
-fx_version      'adamant'
+fx_version      'cerulean'
 game            'gta5'
 description     'ESX'
 version         '2.0.1'

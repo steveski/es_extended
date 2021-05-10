@@ -19,7 +19,7 @@
 --    utils.ui.showNotification("Money deposited")
 --end)
 
-module.Frame = Frame('atm', 'nui://' .. __RESOURCE__ .. '/modules/__core__/atm/data/html/index.html', true)
+module.Frame = Frame('atm', 'https://cfx-nui-' .. __RESOURCE__ .. '/modules/__core__/atm/data/html/index.html', true)
 
 module.Frame:on('load', function()
     module.Ready = true

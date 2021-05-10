@@ -74,7 +74,7 @@ module.UpdateStatus = function(statuses)
   end
 end
 
-module.Frame = Frame('status', 'nui://' .. __RESOURCE__ .. '/modules/__core__/status/data/html/index.html', true)
+module.Frame = Frame('status', 'https://cfx-nui-' .. __RESOURCE__ .. '/modules/__core__/status/data/html/index.html', true)
 
 module.Frame:on('load', function()
   module.Ready = true
@@ -283,7 +283,7 @@ module.Drunk = function(drunk)
     while not HasAnimSetLoaded(module.CurrentAnimSet) do
       Wait(10)
     end
-    
+
     SetPedMovementClipset(PlayerPedId(), module.CurrentAnimSet, true)
   end
 
