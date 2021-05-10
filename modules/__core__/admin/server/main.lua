@@ -54,17 +54,23 @@ TeleportToCoords:addArgument("x", "number", _U('commandgeneric_x'))
 TeleportToCoords:addArgument("y", "number", _U('commandgeneric_y'))
 TeleportToCoords:addArgument("z", "number", _U('commandgeneric_z'))
 TeleportToCoords:setHandler(function(player, args)
-  if not args.player or args.player.source == player.source then
-    return emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('commanderror_self')}})
-  end
-
-  emitClient("esx:admin:inPlayerCommand", player.source, "TeleportToCoords", player.source, x, y, z)
+  emitClient("esx:admin:inPlayerCommand", player.source, "TeleportToCoords", player.source, args.x + 0.0, args.y + 0.0, args.z + 0.0)
 end)
 
 local SpawnVehicleCommand = Command("car", "admin", _U('admin_command_car'))
 SpawnVehicleCommand:addArgument("modelname", "string", _U('admin_command_car_hashname'))
 SpawnVehicleCommand:setHandler(function(player, args)
-  emitClient("esx:admin:inPlayerCommand", player.source, "SpawnVehicle", player.source, args.modelname)
+
+  if IsPlayerAceAllowed(player.source, 'command') then
+    local playerPed = GetPlayerPed(player.source)
+    local playerCoords = GetEntityCoords(playerPed)
+    local playerHeading = GetEntityHeading(playerPed)
+    utils.game.createVehicle(args.modelname, playerCoords, playerHeading, function(vehicle)
+      -- warp player to vehicle
+      local networkId = NetworkGetNetworkIdFromEntity(vehicle)
+      emitClient("esx:admin:inPlayerCommand", player.source, "WarpPlayerIntoVehicle", networkId)
+    end)
+  end
 end)
 
 local DeleteVehicleCommand = Command("dv", "admin", _U('admin_command_cardel'))
@@ -219,7 +225,7 @@ KickPlayer:setHandler(function(player, args)
   if not args.player then args.player = player end
 
   local foundPlayer = Player.fromId(args.player.source)
-  playerId = args.player.source 
+  playerId = args.player.source
 
   if foundPlayer then
     module.KickPlayer(playerId, args.reason)
