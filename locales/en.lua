@@ -158,6 +158,7 @@ Locales['en'] = {
   ['admin_get_player_coords_result'] = 'The player %s (%s %s) is at (%.2f, %.2f, %.2f)',
   ['admin_get_player_coords_error'] = 'There was an error trying to get the player coords.',
   ['admin_get_players'] = '"Player [%s](%s): %s %s | Ping: %s',
+  ['admin_result_killed'] = 'You have been killed by admin.',
 	['admin_result_revive'] = 'You have been ressurected by admin.',
 	['admin_result_health'] = 'Your health has been changed.',
 	['admin_result_armor'] = 'Your armor has been changed.',
