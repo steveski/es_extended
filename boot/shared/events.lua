@@ -12,8 +12,6 @@
 
 local module = ESX.Modules['boot']
 
-AddEventHandler('esx:manifest:check:pass', module.Boot)
-
 AddEventHandler('esx:module:load:before', function(name, group)
   local str = string.format('^7/^5%s^7/^3%s^7] start', group, name)
   _print(str)
