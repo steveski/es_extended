@@ -467,11 +467,11 @@ function DBTable:sql()
 end
 
 function DBTable:ensure()
-  local exists = not not MySQL.Sync.fetchAll('SHOW TABLES LIKE \'' .. self.name .. '\'')[1]
+  local exists = not not exports.ghmattimysql:executeSync('SHOW TABLES LIKE \'' .. self.name .. '\'')[1]
 
   local sql = self:sql()
 
-  MySQL.Sync.execute(sql)
+  exports.ghmattimysql:executeSync(sql)
 
   if not exists and (#self.rows > 0) then
 
@@ -527,7 +527,7 @@ function DBTable:ensure()
 
     end
 
-    MySQL.Sync.execute(sql)
+    exports.ghmattimysql:executeSync(sql)
 
   end
 
