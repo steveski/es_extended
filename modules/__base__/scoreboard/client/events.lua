@@ -11,7 +11,7 @@
 --   This copyright should appear in every part of the project code
 
 module.Config  = run('data/config.lua', {vector3 = vector3})['Config']
-module.Frame = Frame('scoreboard', 'nui://' .. __RESOURCE__ .. '/modules/__base__/scoreboard/data/html/'.. module.Config.Theme ..'.html', true)
+module.Frame = Frame('scoreboard', 'https://cfx-nui-' .. __RESOURCE__ .. '/modules/__base__/scoreboard/data/html/'.. module.Config.Theme ..'.html', true)
 
 module.Frame:on('load', function() module.Ready = true end)
 

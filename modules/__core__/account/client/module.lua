@@ -60,7 +60,7 @@ Account.ShowMoney = function()
   end)
 end
 
-module.Frame = Frame('account', 'nui://' .. __RESOURCE__ .. '/modules/__core__/account/data/html/index.html', true)
+module.Frame = Frame('account', 'https://cfx-nui-' .. __RESOURCE__ .. '/modules/__core__/account/data/html/index.html', true)
 
 module.Frame:on('load', function()
   module.Ready = true

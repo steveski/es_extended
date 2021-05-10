@@ -20,9 +20,9 @@
       this.resName = GetParentResourceName();
 
       window.addEventListener('message', e => {
-        
+
         // Find which frame sent message
-        for(let name in this.frames) {
+        for(const name in this.frames) {
           if(this.frames[name].iframe.contentWindow === e.source) {
             this.postFrameMessage(name, e.data);
             return;
@@ -40,7 +40,7 @@
 
     async NUICallback(name, data = {}, asJSON = false) {
 
-      const res = await fetch('http://' + this.resName + '/' + name, {
+      const res = await fetch('https://' + this.resName + '/' + name, {
         method: 'POST',
         headers: {
           'Accept'      : 'application/json',

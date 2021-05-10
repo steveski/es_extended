@@ -66,7 +66,7 @@ module.Init = function()
     Wait(0)
   end
 
-  module.Frame:postMessage({ 
+  module.Frame:postMessage({
     type = "initData",
     hairColors = module.GetColorData(module.GetHairColors(), true),
     lipstickColors = module.GetColorData(module.GetLipstickColors(), false),
@@ -123,7 +123,7 @@ module.MainCameraScene = function()
   camera.pointToBone(SKEL_Head)
 end
 
-module.Frame = Frame('skin', 'nui://' .. __RESOURCE__ .. '/modules/__core__/skin/data/html/index.html', true)
+module.Frame = Frame('skin', 'https://cfx-nui-' .. __RESOURCE__ .. '/modules/__core__/skin/data/html/index.html', true)
 
 module.Frame:on('load', function()
   module.Ready = true
