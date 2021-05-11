@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ES Extended'
 
-version '1.2.0'
+version '1.3.0'
 
 server_scripts {
 	'@async/async.lua',
@@ -31,6 +31,7 @@ server_scripts {
 	'server/paycheck.lua',
 	'server/main.lua',
 	'server/commands.lua',
+	'server/jobs.lua',
 
 	'common/modules/math.lua',
 	'common/modules/table.lua',
