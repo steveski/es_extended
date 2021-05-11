@@ -222,6 +222,9 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 			TriggerEvent('esx:onAddInventoryItem', self.source, item.name, item.count)
 			self.triggerEvent('esx:addInventoryItem', item.name, item.count)
+
+			local xPlayer = ESX.GetPlayerFromId(self.source)
+			ESX.SavePlayerInventory(xPlayer)
 		end
 	end
 
@@ -238,6 +241,9 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 				TriggerEvent('esx:onRemoveInventoryItem', self.source, item.name, item.count)
 				self.triggerEvent('esx:removeInventoryItem', item.name, item.count)
+
+				local xPlayer = ESX.GetPlayerFromId(self.source)
+				ESX.SavePlayerInventory(xPlayer)
 			end
 		end
 	end
@@ -265,10 +271,19 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	self.canCarryItem = function(name, count)
+		local item = self.getInventoryItem(name)
+		local limit = ESX.Items[name].limit
+		local newCount = item.count + count
+
 		local currentWeight, itemWeight = self.weight, ESX.Items[name].weight
 		local newWeight = currentWeight + (itemWeight * count)
 
-		return newWeight <= self.maxWeight
+		local limitTest = true
+		if limit ~= nil then
+			limitTest =(newCount <= limit)
+		end
+		
+		return (newWeight <= self.maxWeight) and limitTest
 	end
 
 	self.canSwapItem = function(firstItem, firstItemCount, testItem, testItemCount)

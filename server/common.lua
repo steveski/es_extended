@@ -1,5 +1,6 @@
 ESX = {}
 ESX.Players = {}
+ESX.PlayersByIdentifier = {}
 ESX.UsableItemsCallbacks = {}
 ESX.Items = {}
 ESX.ServerCallbacks = {}
@@ -25,7 +26,8 @@ MySQL.ready(function()
 				label = v.label,
 				weight = v.weight,
 				rare = v.rare,
-				canRemove = v.can_remove
+				canRemove = v.can_remove,
+				limit = v.limit
 			}
 		end
 	end)

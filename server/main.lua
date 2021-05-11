@@ -14,11 +14,11 @@ function onPlayerJoined(playerId)
 	local identifier
 
 	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-		if string.match(v, 'license:') then
-			identifier = string.sub(v, 9)
-			break
-		end
-	end
+        if string.match(v, 'license:') then
+            identifier = v
+            break
+        end
+    end
 
 	if identifier then
 		if ESX.GetPlayerFromIdentifier(identifier) then
@@ -160,7 +160,8 @@ function loadESXPlayer(identifier, playerId)
 					weight = item.weight,
 					usable = ESX.UsableItemsCallbacks[name] ~= nil,
 					rare = item.rare,
-					canRemove = item.canRemove
+					canRemove = item.canRemove,
+					limit = item.limit
 				})
 			end
 
@@ -212,6 +213,8 @@ function loadESXPlayer(identifier, playerId)
 	Async.parallel(tasks, function(results)
 		local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job, userData.loadout, userData.playerName, userData.coords)
 		ESX.Players[playerId] = xPlayer
+		ESX.PlayersByIdentifier[identifier] = xPlayer
+		
 		TriggerEvent('esx:playerLoaded', playerId, xPlayer)
 
 		xPlayer.triggerEvent('esx:playerLoaded', {
@@ -248,6 +251,7 @@ AddEventHandler('playerDropped', function(reason)
 
 		ESX.SavePlayer(xPlayer, function()
 			ESX.Players[playerId] = nil
+			ESX.PlayersByIdentifier[xPlayer.identifier] = nil
 		end)
 	end
 end)
@@ -368,9 +372,11 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 				xPlayer.showNotification(_U('imp_invalid_quantity'))
 			else
 				xPlayer.removeInventoryItem(itemName, itemCount)
-				local pickupLabel = ('~y~%s~s~ [~b~%s~s~]'):format(xItem.label, itemCount)
-				ESX.CreatePickup('item_standard', itemName, itemCount, pickupLabel, playerId)
-				xPlayer.showNotification(_U('threw_standard', itemCount, xItem.label))
+				if Config.EnableItemPickups then
+					local pickupLabel = ('~y~%s~s~ [~b~%s~s~]'):format(xItem.label, itemCount)
+					ESX.CreatePickup('item_standard', itemName, itemCount, pickupLabel, playerId)
+					xPlayer.showNotification(_U('threw_standard', itemCount, xItem.label))
+				end
 			end
 		end
 	elseif type == 'item_account' then
@@ -383,9 +389,11 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 				xPlayer.showNotification(_U('imp_invalid_amount'))
 			else
 				xPlayer.removeAccountMoney(itemName, itemCount)
-				local pickupLabel = ('~y~%s~s~ [~g~%s~s~]'):format(account.label, _U('locale_currency', ESX.Math.GroupDigits(itemCount)))
-				ESX.CreatePickup('item_account', itemName, itemCount, pickupLabel, playerId)
-				xPlayer.showNotification(_U('threw_account', ESX.Math.GroupDigits(itemCount), string.lower(account.label)))
+				if Config.EnableItemPickups then
+					local pickupLabel = ('~y~%s~s~ [~g~%s~s~]'):format(account.label, _U('locale_currency', ESX.Math.GroupDigits(itemCount)))
+					ESX.CreatePickup('item_account', itemName, itemCount, pickupLabel, playerId)
+					xPlayer.showNotification(_U('threw_account', ESX.Math.GroupDigits(itemCount), string.lower(account.label)))
+				end
 			end
 		end
 	elseif type == 'item_weapon' then
@@ -406,7 +414,9 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 				xPlayer.showNotification(_U('threw_weapon', weapon.label))
 			end
 
-			ESX.CreatePickup('item_weapon', itemName, weapon.ammo, pickupLabel, playerId, components, weapon.tintIndex)
+			if Config.EnableItemPickups then
+				ESX.CreatePickup('item_weapon', itemName, weapon.ammo, pickupLabel, playerId, components, weapon.tintIndex)
+			end
 		end
 	end
 end)
@@ -501,8 +511,6 @@ ESX.RegisterServerCallback('esx:getPlayerNames', function(source, cb, players)
 	cb(players)
 end)
 
-ESX.StartDBSync()
-
 Citizen.CreateThread(function()
 	while(true) do
 		Citizen.Wait(10 * 60 * 1000)
@@ -522,3 +530,4 @@ Citizen.CreateThread(function()
 	end
 
 end)
+

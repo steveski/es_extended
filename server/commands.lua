@@ -8,7 +8,10 @@ end, false, {help = _U('command_setcoords'), validate = true, arguments = {
 
 ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
 	if ESX.DoesJobExist(args.job, args.grade) then
+		local oldJob = args.playerId.job.name
 		args.playerId.setJob(args.job, args.grade)
+		
+		TriggerEvent('esx:playerSwitchJob', args.playerId.identifier, oldJob, args.job)
 	else
 		showError(_U('command_setjob_invalid'))
 	end
