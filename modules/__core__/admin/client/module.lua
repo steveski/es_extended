@@ -22,12 +22,8 @@ module.OnSelfCommand = function(action, ...)
 end
 
 module.Init = function()
-  -- KeyInput Constructors
-  local keyAdminMenu = KeyInput(input.KeyBindings.F9, 'Open Admin Menu', true)
-
-  keyAdminMenu:onPress(function()
-    module.openAdminMenu()
-  end)
+  input.RegisterControl(input.Groups.MOVE, input.Controls.DROP_WEAPON)
+  input.On('released', input.Groups.MOVE, input.Controls.DROP_WEAPON, module.openAdminMenu)
 
   module.Frame = Frame('admin', 'https://cfx-nui-' .. __RESOURCE__ .. '/modules/__core__/admin/data/build/index.html', false)
 
@@ -122,20 +118,16 @@ module.TeleportToMarker = function(sourceId)
   request("esx:admin:isAuthorized", function(a)
     if not a then return end
 
-    local waypoint = GetFirstBlipInfoId(8)
-
-    if DoesBlipExist(waypoint) then
-      local waypointCoords = GetBlipInfoIdCoord(waypoint)
-
-      local playerPed = PlayerPedId()
+    if DoesBlipExist(GetFirstBlipInfoId(8)) then
+      local waypointCoords = GetBlipInfoIdCoord(GetFirstBlipInfoId(8))
 
       for height = 1, 1000, 10 do
-        SetPedCoordsKeepVehicle(playerPed, waypointCoords["x"], waypointCoords["y"], height + 0.0)
+        SetPedCoordsKeepVehicle(PlayerPedId(), waypointCoords["x"], waypointCoords["y"], height + 0.0)
 
         local foundGround, zPos = GetGroundZFor_3dCoord(waypointCoords["x"], waypointCoords["y"], 2500.0)
 
         if foundGround then
-          SetPedCoordsKeepVehicle(playerPed, vector3(waypointCoords["x"], waypointCoords["y"], zPos))
+          SetPedCoordsKeepVehicle(PlayerPedId(), vector3(waypointCoords["x"], waypointCoords["y"], zPos))
           break
         end
 
@@ -205,13 +197,11 @@ module.DeleteVehicle = function(sourceId, radius)
   request("esx:admin:isAuthorized", function(a)
     if not a then return end
 
-    local playerPed = PlayerPedId()
-
-    if IsPedInAnyVehicle(playerPed, true) then
-      module.delVehicle(GetVehiclePedIsIn(playerPed, false))
+    if IsPedInAnyVehicle(PlayerPedId(), true) then
+      module.delVehicle(GetVehiclePedIsIn(PlayerPedId(), false))
     else
       if radius and tonumber(radius) then
-        local vehicles = utils.game.getVehiclesInArea(GetEntityCoords(playerPed), tonumber(radius) + 0.01)
+        local vehicles = utils.game.getVehiclesInArea(GetEntityCoords(PlayerPedId()), tonumber(radius) + 0.01)
 
         for k,entity in ipairs(vehicles) do
           if not IsPedAPlayer(GetPedInVehicleSeat(entity, -1)) and not IsPedAPlayer(GetPedInVehicleSeat(entity, 0)) then -- prevent delete with people inside.
@@ -245,18 +235,15 @@ module.FreezeUnfreeze = function(sourceId, action)
   request("esx:admin:isAuthorized", function(a)
     if not a then return end
 
-    local playerPed = PlayerPedId()
-    local playerId = PlayerId()
-
     if action == 'freeze' then
-      FreezeEntityPosition(playerPed, true)
-      SetEntityCollision(playerPed, false)
-      SetPlayerInvincible(playerId, true)
+      FreezeEntityPosition(PlayerPedId(), true)
+      SetEntityCollision(PlayerPedId(), false)
+      SetPlayerInvincible(PlayerId(), true)
       utils.ui.showNotification(_U('admin_result_freeze'))
     elseif action == 'unfreeze' then
-      FreezeEntityPosition(playerPed, false)
-      SetEntityCollision(playerPed, true)
-      SetPlayerInvincible(playerId, false)
+      FreezeEntityPosition(PlayerPedId(), false)
+      SetEntityCollision(PlayerPedId(), true)
+      SetPlayerInvincible(PlayerId(), false)
       utils.ui.showNotification(_U('admin_result_unfreeze'))
     end
   end, sourceId)
@@ -266,15 +253,13 @@ module.RevivePlayer = function(sourceId)
   request("esx:admin:isAuthorized", function(a)
     if not a then return end
 
-    local playerPed = PlayerPedId()
+    NetworkResurrectLocalPlayer(GetEntityCoords(PlayerPedId()), true, true, false)
 
-    NetworkResurrectLocalPlayer(GetEntityCoords(playerPed), true, true, false)
-
-    ClearPedBloodDamage(playerPed)
-    ClearPedLastDamageBone(playerPed)
-    ResetPedVisibleDamage(playerPed)
-    ClearPedLastWeaponDamage(playerPed)
-    RemoveParticleFxFromEntity(playerPed)
+    ClearPedBloodDamage(PlayerPedId())
+    ClearPedLastDamageBone(PlayerPedId())
+    ResetPedVisibleDamage(PlayerPedId())
+    ClearPedLastWeaponDamage(PlayerPedId())
+    RemoveParticleFxFromEntity(PlayerPedId())
     utils.ui.showNotification(_U('admin_result_revive'))
   end, sourceId)
 end
@@ -308,24 +293,22 @@ module.SpectatePlayer = function(sourceId, targetId)
   request("esx:admin:isAuthorized", function(a)
     if not a then return end
 
-    local playerPed = PlayerPedId()
-
     local coords = GetEntityCoords(PlayerPedId())
 
-    FreezeEntityPosition(playerPed, true)
-    SetEntityVisible(playerPed, false, false)
+    FreezeEntityPosition(PlayerPedId(), true)
+    SetEntityVisible(PlayerPedId(), false, false)
     RequestCollisionAtCoord(GetEntityCoords(GetPlayerPed(targetId)))
     NetworkSetInSpectatorMode(1, targetId)
 
     module.CancelCurrentAction = function()
       Interact.StopHelpNotification()
 
-      FreezeEntityPosition(playerPed, false)
+      FreezeEntityPosition(PlayerPedId(), false)
       RequestCollisionAtCoord(coords)
       NetworkSetInSpectatorMode(0, targetId)
-      SetEntityVisible(playerPed, true, true)
+      SetEntityVisible(PlayerPedId(), true, true)
 
-      utils.game.teleport(playerPed, coords)
+      utils.game.teleport(PlayerPedId(), coords)
     end
 
     Interact.ShowHelpNotification(_U('admin_result_spectate'))
@@ -336,19 +319,16 @@ module.SetPlayerHealth = function(sourceId, health)
   request("esx:admin:isAuthorized", function(a)
     if not a then return end
 
-    local playerPed = PlayerPedId()
-    local maxHealth = GetPedMaxHealth(playerPed)
-
-    if health >= maxHealth then
-      SetEntityHealth(playerPed, maxHealth)
+    if health >= GetPedMaxHealth(PlayerPedId()) then
+      SetEntityHealth(PlayerPedId(), GetPedMaxHealth(PlayerPedId()))
 
       utils.ui.showNotification(_U('admin_result_health'))
     elseif health <= 0 then
-      SetEntityHealth(playerPed, health)
+      SetEntityHealth(PlayerPedId(), health)
 
       utils.ui.showNotification(_U('admin_result_killed'))
-    elseif health > 0 and health < maxHealth then
-      SetEntityHealth(playerPed, health)
+    elseif health > 0 and health < GetPedMaxHealth(PlayerPedId()) then
+      SetEntityHealth(PlayerPedId(), health)
 
       utils.ui.showNotification(_U('admin_result_health'))
     end
