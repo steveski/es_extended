@@ -208,13 +208,8 @@ ESX.SavePlayers = function(cb)
 	end)
 end
 
-ESX.StartDBSync = function()
-	function saveData()
-		ESX.SavePlayers()
-		SetTimeout(10 * 60 * 1000, saveData)
-	end
-
-	SetTimeout(10 * 60 * 1000, saveData)
+function saveData()
+	ESX.SavePlayers()
 end
 
 ESX.GetPlayers = function()

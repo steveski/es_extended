@@ -502,4 +502,23 @@ ESX.RegisterServerCallback('esx:getPlayerNames', function(source, cb, players)
 end)
 
 ESX.StartDBSync()
-ESX.StartPayCheck()
+
+Citizen.CreateThread(function()
+	while(true) do
+		Citizen.Wait(10 * 60 * 1000)
+		
+		saveData()
+
+	end
+
+end)
+
+Citizen.CreateThread(function()
+	while(true) do
+		Citizen.Wait(Config.PaycheckInterval)
+		
+		payCheck()
+
+	end
+
+end)
