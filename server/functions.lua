@@ -261,7 +261,7 @@ ESX.GetPlayers = function()
 end
 
 ESX.GetPlayerFromId = function(source)
-	return ESX.Players[tonumber(source)]
+	return ESX.Players[source]
 end
 
 ESX.GetPlayerIdentifer = function(player)
