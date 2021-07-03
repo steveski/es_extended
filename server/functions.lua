@@ -196,7 +196,7 @@ ESX.SavePlayer = function(xPlayer, cb)
 end
 
 ESX.SavePlayers = function(cb)
-	local xPlayers = ESX.GetPlayers()
+	local xPlayers = ESX.GetExtendedPlayers()
 	print("ESX.GetPlayers executed in es_extended saveplayers")
 
 	local selectListWithNames = "SELECT '%s' AS identifier, '%s' AS new_accounts, '%s' AS new_job, %s AS new_job_grade, '%s' AS new_group, '%s' AS new_loadout, '%s' AS new_position, '%s' AS new_inventory "
@@ -207,8 +207,7 @@ ESX.SavePlayers = function(cb)
 
 		local selectList = selectListNoNames
 		local first = true
-		for k, player in pairs(xPlayers) do
-			local xPlayer = ESX.GetPlayerFromId(player)
+		for k, xPlayer in pairs(xPlayers) do
 			if first == false then
 				updateCommand = updateCommand .. ' UNION '
 			else
